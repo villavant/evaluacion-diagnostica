@@ -87,7 +87,8 @@
   /* ---------- Preguntas ---------- */
   .q-block{border-top:1px solid var(--border);padding-top:22px;margin-top:22px;}
   .q-block:first-child{border-top:none;padding-top:0;margin-top:0;}
-  .q-index{font-size:12px;font-weight:600;color:var(--graphite);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+  .q-index{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;font-weight:600;color:var(--graphite);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+  .q-pts{flex:none;background:var(--ink);color:#fff;font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;padding:3px 9px;border-radius:2px;}
   .q-text{font-size:16.5px;font-weight:600;margin-bottom:12px;color:var(--ink);}
   pre.code{
     background:var(--ink);color:#E8E8E8;padding:14px 16px;border-radius:var(--radius);font-size:13.5px;
@@ -262,7 +263,7 @@ function renderPortada() {
   const card = el(`
     <div class="card">
       <h2>Antes de empezar</h2>
-      <p>Este autodiagnóstico ayuda a la coordinación de la Maestría en Ciencia de Datos e Inteligencia Artificial a conocer tu nivel actual de programación. No requiere instalar nada.</p>
+      <p>Este autodiagnóstico te ayuda a conocer tu nivel actual de programación. No requiere instalar nada.</p>
       <div class="hero-meta">
         <span class="pill">45 minutos</span>
         <span class="pill">23 preguntas</span>
@@ -365,7 +366,7 @@ function renderParteI(bloqueIdx) {
     const p = DATA.preguntas[qi];
     const block = el(`
       <div class="q-block">
-        <div class="q-index">Pregunta ${qi + 1} de ${DATA.preguntas.length} · ${p.tema}</div>
+        <div class="q-index"><span>Pregunta ${qi + 1} de ${DATA.preguntas.length} · ${p.tema}</span><span class="q-pts">4 pts</span></div>
         <div class="q-text">${escapeHtml(p.q)}</div>
         ${p.code ? `<pre class="code">${escapeHtml(p.code)}</pre>` : ''}
         <div class="opts" data-qi="${qi}"></div>
@@ -417,10 +418,10 @@ function renderReto1() {
   `);
   const c = card.querySelector('#r1Container');
   const PTS_RETO = { r1a: 7, r1b: 7, r1c: 6 };
-  DATA.reto1_preguntas.forEach((rp) => {
+  DATA.reto1_preguntas.forEach((rp, ri) => {
     const block = el(`
       <div class="q-block">
-        <div class="q-index">${PTS_RETO[rp.id]} puntos</div>
+        <div class="q-index"><span>Pregunta ${ri + 1} de ${DATA.reto1_preguntas.length}</span><span class="q-pts">${PTS_RETO[rp.id]} pts</span></div>
         <div class="q-text">${escapeHtml(rp.label)}</div>
         <div class="opts"></div>
       </div>
