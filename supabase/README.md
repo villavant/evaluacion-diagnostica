@@ -23,6 +23,8 @@ Para quitar el acceso: `delete from public.admins where email = '...';`
 
 ## Cambiar la clave de respuestas
 
+Puntaje: Parte I = 20 preguntas × 4 = 80; Parte II (reto) = 7 + 7 + 6 = 20. Total 100.
+
 ```sql
-update privado.clave set datos = '{"parte1":[...20 índices...],"reto1":{"r1a":0,"r1b":0,"r1c":0},"reto2":0}' where id = 1;
+update privado.clave set datos = '{"parte1":[...20 índices...],"reto1":{"r1a":0,"r1b":0,"r1c":0},"reto1_pts":{"r1a":7,"r1b":7,"r1c":6}}' where id = 1;
 ```

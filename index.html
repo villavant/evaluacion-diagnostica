@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Evaluación Diagnóstica de Programación — Maestría en Ciencia de Datos e IA | UTEC Posgrado</title>
+<title>Autodiagnóstico de Programación — Maestría en Ciencia de Datos e IA | UTEC Posgrado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -152,7 +152,7 @@
     <a href="https://posgrado.utec.edu.pe/maestrias/ciencia-de-datos-inteligencia-artificial" target="_blank" rel="noopener" aria-label="UTEC Posgrado">
       <img class="logo" src="assets/logo-utec-posgrado-blanco.svg" alt="UTEC Posgrado">
     </a>
-    <div class="step"><strong>Evaluación diagnóstica</strong><span id="progressLabel">Paso 1</span></div>
+    <div class="step"><strong>Autodiagnóstico</strong><span id="progressLabel">Paso 1</span></div>
   </div>
   <div class="progress-outer"><div class="progress-inner" id="progressBar"></div></div>
 </header>
@@ -160,7 +160,7 @@
 <section class="hero">
   <div class="inner">
     <p class="eyebrow">Maestría en Ciencia de Datos e Inteligencia Artificial</p>
-    <h1>Evaluación diagnóstica de programación</h1>
+    <h1>Autodiagnóstico de programación</h1>
   </div>
 </section>
 
@@ -175,7 +175,7 @@
   </div>
 </footer>
 
-<script id="exam-data" type="application/json">{"preguntas": [{"tema": "Tipos y operadores", "q": "¿Cuál es el resultado de la división entera 17 // 5 y del residuo 17 % 5?", "code": null, "opts": ["3 y 2", "3.4 y 0", "2 y 3", "4 y 2"]}, {"tema": "Operadores lógicos", "q": "Dado a = 4 y b = 7, ¿cuál es el valor de la expresión (a < b) AND NOT (a == 4)?", "code": null, "opts": ["Verdadero", "Falso", "Error de sintaxis", "Depende del lenguaje"]}, {"tema": "Condicionales y bucles", "q": "¿Qué valor se imprime?", "code": "total = 0\npara i desde 1 hasta 6 hacer\n  si i es impar entonces\n    total = total + i\n  fin si\nfin para\nimprimir total", "opts": ["21", "12", "9", "6"]}, {"tema": "Bucles anidados", "q": "¿Qué valor se imprime?", "code": "contador = 0\npara i desde 1 hasta 3 hacer\n  para j desde 1 hasta i hacer\n    contador = contador + 1\n  fin para\nfin para\nimprimir contador", "opts": ["3", "9", "12", "6"]}, {"tema": "Bucle while", "q": "¿Cuántas veces se ejecuta el cuerpo del bucle? (// es división entera)", "code": "n = 10\nmientras n > 1 hacer\n  n = n // 2\nfin mientras", "opts": ["3", "2", "4", "5"]}, {"tema": "Condicionales", "q": "¿Qué se imprime?", "code": "x = 15\nsi x > 10 entonces\n  imprimir \"A\"\nfin si\nsi x > 5 entonces\n  imprimir \"B\"\nsino\n  imprimir \"C\"\nfin si", "opts": ["Solo A", "Solo B", "A y B", "A, B y C"]}, {"tema": "Funciones y paso por valor", "q": "Los números se pasan por valor. ¿Qué imprime este código?", "code": "función duplicar(n)\n  n = n * 2\n  retornar n\nfin función\n\nx = 5\ny = duplicar(x)\nimprimir x, y", "opts": ["10 y 10", "5 y 5", "10 y 5", "5 y 10"]}, {"tema": "Funciones y retorno", "q": "¿Qué valor se imprime?", "code": "función f(a, b)\n  retornar a - b\nfin función\n\nimprimir f(10, 4) + f(4, 10)", "opts": ["12", "0", "6", "-12"]}, {"tema": "Listas (slicing)", "q": "Dada lista = [10, 20, 30, 40, 50] (índices desde 0), ¿qué contiene lista[1:4], donde el índice final es excluyente?", "code": null, "opts": ["[10, 20, 30, 40]", "[20, 30, 40, 50]", "[20, 30]", "[20, 30, 40]"]}, {"tema": "Listas (operaciones)", "q": "¿Qué contiene la lista al final?", "code": "lista = [3, 8, 1]\nlista.agregar_al_final(5)\nlista.eliminar_posicion(0)\nimprimir lista", "opts": ["[3, 8, 1]", "[8, 1, 5]", "[8, 1]", "[3, 1, 5]"]}, {"tema": "Strings", "q": "Dado texto = \"datos\", ¿qué se obtiene al tomar solo los caracteres de las posiciones 0, 2 y 4 (base 0)?", "code": null, "opts": ["\"dts\"", "\"atos\"", "\"aos\"", "\"dato\""]}, {"tema": "Diccionarios", "q": "¿Qué se imprime?", "code": "d = {\"a\": 1, \"b\": 2}\nd[\"c\"] = 3\nd[\"a\"] = d[\"a\"] + 10\nimprimir d[\"a\"], tamaño(d)", "opts": ["1 y 2", "10 y 3", "11 y 2", "11 y 3"]}, {"tema": "Conjuntos (sets)", "q": "Se tiene una lista de 10,000 IDs de clientes con duplicados y se desea quedarse solo con los valores únicos. ¿Qué estructura es la más adecuada?", "code": null, "opts": ["Pila", "Cola", "Conjunto (set)", "Matriz"]}, {"tema": "Recursión", "q": "¿Qué valor se imprime?", "code": "función suma(n)\n  si n == 0 entonces\n    retornar 0\n  fin si\n  retornar n + suma(n - 1)\nfin función\n\nimprimir suma(4)", "opts": ["4", "24", "0", "10"]}, {"tema": "Recursión (caso base)", "q": "En una función recursiva, ¿para qué sirve el \"caso base\"?", "code": null, "opts": ["Para acelerar la ejecución", "Para detener la recursión cuando se llega al caso más simple", "Para declarar las variables", "Para evitar usar parámetros"]}, {"tema": "Complejidad", "q": "Recorrer una sola vez una lista de n elementos para sumar todos sus valores tiene una complejidad de:", "code": null, "opts": ["O(1)", "O(log n)", "O(n)", "O(n²)"]}, {"tema": "Eficiencia de búsqueda", "q": "Se busca un valor en una lista ORDENADA de 1,000,000 de números. ¿Qué estrategia es la más eficiente?", "code": null, "opts": ["Recorrerla elemento por elemento desde el inicio", "Búsqueda binaria: descartar la mitad de la lista en cada paso", "Copiarla a otra lista y recorrer la copia", "Todas tardan lo mismo"]}, {"tema": "Depuración (caso borde)", "q": "Este código calcula el promedio de una lista. ¿En qué caso falla?", "code": "suma = 0\npara cada x en lista hacer\n  suma = suma + x\nfin para\npromedio = suma / tamaño(lista)", "opts": ["Una lista con números negativos", "Una lista con decimales", "Una lista con un solo elemento", "Una lista vacía"]}, {"tema": "Depuración (bucle)", "q": "Se quiere imprimir los números del 1 al 5. ¿Qué ocurre con este código?", "code": "i = 1\nmientras i <= 5 hacer\n  imprimir i\nfin mientras", "opts": ["Imprime del 1 al 4", "Imprime del 1 al 5 y termina", "Bucle infinito: i nunca se incrementa", "Error de sintaxis"]}, {"tema": "Depuración (lógica)", "q": "Este código busca el mayor valor de una lista de enteros. ¿En qué caso da un resultado incorrecto?", "code": "mayor = 0\npara cada x en lista hacer\n  si x > mayor entonces\n    mayor = x\n  fin si\nfin para\nretornar mayor", "opts": ["Una lista con solo números negativos", "Una lista con números repetidos", "Una lista con ceros y positivos", "Nunca falla"]}], "reto1_texto": "ENTRENAR modelo gráfico Matriz Entrenar modelo Variable datos modelo Datos lista python variable python datos función variable datos Matriz ERROR Entrenar entrenar entrenar Modelo variable función función python DATOS variable prueba error FUNCIÓN Clase ENTRENAR matriz Datos Variable datos Prueba datos MODELO python entrenar lista matriz python gráfico error datos modelo variable datos FUNCIÓN Datos Error variable modelo función datos Datos Modelo Datos entrenar clase datos Modelo datos PYTHON PYTHON PRUEBA error Python entrenar Python modelo Matriz Lista datos modelo variable entrenar clase modelo Datos modelo PYTHON lista LISTA datos función error modelo MODELO MODELO función python gráfico clase modelo lista python gráfico python lista datos datos ENTRENAR Datos", "reto1_preguntas": [{"id": "r1a", "label": "¿Cuál es la palabra más frecuente?", "opts": ["python", "datos", "modelo", "error", "lista"]}, {"id": "r1b", "label": "¿Cuántas veces aparece esa palabra?", "opts": ["14", "22", "109", "23", "17", "24"]}, {"id": "r1c", "label": "¿Cuántas palabras DISTINTAS tiene el texto (ignorando mayúsculas)?", "opts": ["13", "12", "30", "11", "109", "14"]}], "reto2_cadenas": ["(()(()()()((()(()())((()()()((((()(((()(()))))))))))))))", ")(()((((())))))((()()(()))(()))((()())(()((())(()(())((())))())())", "(()()())()()()()()()()()(()((()()((((((()())(()))))))))", "(()())(()(()((()((()((()(())))())((()))((()(())(()))))()(())))))", "(()(())(()()())())(((()((((((((()((())))((()())((()))()(())))))))))))))", ")((())((()))((((()(((()(((()()()()((()((()(()()()()))))))(())())))))))))", "()((()()(())((((()(())(()(()()))())())((())((((((()(((((()))))))))))))))))", "((()())()()()(()))()()(())()()()()(()(()()()(())))()((())))(()()(()())"], "reto2_pregunta": {"id": "r2a", "label": "¿Cuántas de las 8 cadenas están balanceadas?", "opts": ["3", "4", "2", "5", "8", "6"]}}</script>
+<script id="exam-data" type="application/json">{"preguntas": [{"tema": "Tipos y operadores", "q": "¿Cuál es el resultado de la división entera 17 // 5 y del residuo 17 % 5?", "code": null, "opts": ["3 y 2", "3.4 y 0", "2 y 3", "4 y 2"]}, {"tema": "Operadores lógicos", "q": "Dado a = 4 y b = 7, ¿cuál es el valor de la expresión (a < b) AND NOT (a == 4)?", "code": null, "opts": ["Verdadero", "Falso", "Error de sintaxis", "Depende del lenguaje"]}, {"tema": "Condicionales y bucles", "q": "¿Qué valor se imprime?", "code": "total = 0\npara i desde 1 hasta 6 hacer\n  si i es impar entonces\n    total = total + i\n  fin si\nfin para\nimprimir total", "opts": ["21", "12", "9", "6"]}, {"tema": "Bucles anidados", "q": "¿Qué valor se imprime?", "code": "contador = 0\npara i desde 1 hasta 3 hacer\n  para j desde 1 hasta i hacer\n    contador = contador + 1\n  fin para\nfin para\nimprimir contador", "opts": ["3", "9", "12", "6"]}, {"tema": "Bucle while", "q": "¿Cuántas veces se ejecuta el cuerpo del bucle? (// es división entera)", "code": "n = 10\nmientras n > 1 hacer\n  n = n // 2\nfin mientras", "opts": ["3", "2", "4", "5"]}, {"tema": "Condicionales", "q": "¿Qué se imprime?", "code": "x = 15\nsi x > 10 entonces\n  imprimir \"A\"\nfin si\nsi x > 5 entonces\n  imprimir \"B\"\nsino\n  imprimir \"C\"\nfin si", "opts": ["Solo A", "Solo B", "A y B", "A, B y C"]}, {"tema": "Funciones y paso por valor", "q": "Los números se pasan por valor. ¿Qué imprime este código?", "code": "función duplicar(n)\n  n = n * 2\n  retornar n\nfin función\n\nx = 5\ny = duplicar(x)\nimprimir x, y", "opts": ["10 y 10", "5 y 5", "10 y 5", "5 y 10"]}, {"tema": "Funciones y retorno", "q": "¿Qué valor se imprime?", "code": "función f(a, b)\n  retornar a - b\nfin función\n\nimprimir f(10, 4) + f(4, 10)", "opts": ["12", "0", "6", "-12"]}, {"tema": "Listas (slicing)", "q": "Dada lista = [10, 20, 30, 40, 50] (índices desde 0), ¿qué contiene lista[1:4], donde el índice final es excluyente?", "code": null, "opts": ["[10, 20, 30, 40]", "[20, 30, 40, 50]", "[20, 30]", "[20, 30, 40]"]}, {"tema": "Listas (operaciones)", "q": "¿Qué contiene la lista al final?", "code": "lista = [3, 8, 1]\nlista.agregar_al_final(5)\nlista.eliminar_posicion(0)\nimprimir lista", "opts": ["[3, 8, 1]", "[8, 1, 5]", "[8, 1]", "[3, 1, 5]"]}, {"tema": "Strings", "q": "Dado texto = \"datos\", ¿qué se obtiene al tomar solo los caracteres de las posiciones 0, 2 y 4 (base 0)?", "code": null, "opts": ["\"dts\"", "\"atos\"", "\"aos\"", "\"dato\""]}, {"tema": "Diccionarios", "q": "¿Qué se imprime?", "code": "d = {\"a\": 1, \"b\": 2}\nd[\"c\"] = 3\nd[\"a\"] = d[\"a\"] + 10\nimprimir d[\"a\"], tamaño(d)", "opts": ["1 y 2", "10 y 3", "11 y 2", "11 y 3"]}, {"tema": "Conjuntos (sets)", "q": "Se tiene una lista de 10,000 IDs de clientes con duplicados y se desea quedarse solo con los valores únicos. ¿Qué estructura es la más adecuada?", "code": null, "opts": ["Pila", "Cola", "Conjunto (set)", "Matriz"]}, {"tema": "Recursión", "q": "¿Qué valor se imprime?", "code": "función suma(n)\n  si n == 0 entonces\n    retornar 0\n  fin si\n  retornar n + suma(n - 1)\nfin función\n\nimprimir suma(4)", "opts": ["4", "24", "0", "10"]}, {"tema": "Recursión (caso base)", "q": "En una función recursiva, ¿para qué sirve el \"caso base\"?", "code": null, "opts": ["Para acelerar la ejecución", "Para detener la recursión cuando se llega al caso más simple", "Para declarar las variables", "Para evitar usar parámetros"]}, {"tema": "Complejidad", "q": "Recorrer una sola vez una lista de n elementos para sumar todos sus valores tiene una complejidad de:", "code": null, "opts": ["O(1)", "O(log n)", "O(n)", "O(n²)"]}, {"tema": "Eficiencia de búsqueda", "q": "Se busca un valor en una lista ORDENADA de 1,000,000 de números. ¿Qué estrategia es la más eficiente?", "code": null, "opts": ["Recorrerla elemento por elemento desde el inicio", "Búsqueda binaria: descartar la mitad de la lista en cada paso", "Copiarla a otra lista y recorrer la copia", "Todas tardan lo mismo"]}, {"tema": "Depuración (caso borde)", "q": "Este código calcula el promedio de una lista. ¿En qué caso falla?", "code": "suma = 0\npara cada x en lista hacer\n  suma = suma + x\nfin para\npromedio = suma / tamaño(lista)", "opts": ["Una lista con números negativos", "Una lista con decimales", "Una lista con un solo elemento", "Una lista vacía"]}, {"tema": "Depuración (bucle)", "q": "Se quiere imprimir los números del 1 al 5. ¿Qué ocurre con este código?", "code": "i = 1\nmientras i <= 5 hacer\n  imprimir i\nfin mientras", "opts": ["Imprime del 1 al 4", "Imprime del 1 al 5 y termina", "Bucle infinito: i nunca se incrementa", "Error de sintaxis"]}, {"tema": "Depuración (lógica)", "q": "Este código busca el mayor valor de una lista de enteros. ¿En qué caso da un resultado incorrecto?", "code": "mayor = 0\npara cada x en lista hacer\n  si x > mayor entonces\n    mayor = x\n  fin si\nfin para\nretornar mayor", "opts": ["Una lista con solo números negativos", "Una lista con números repetidos", "Una lista con ceros y positivos", "Nunca falla"]}], "reto1_texto": "ENTRENAR modelo gráfico Matriz Entrenar modelo Variable datos modelo Datos lista python variable python datos función variable datos Matriz ERROR Entrenar entrenar entrenar Modelo variable función función python DATOS variable prueba error FUNCIÓN Clase ENTRENAR matriz Datos Variable datos Prueba datos MODELO python entrenar lista matriz python gráfico error datos modelo variable datos FUNCIÓN Datos Error variable modelo función datos Datos Modelo Datos entrenar clase datos Modelo datos PYTHON PYTHON PRUEBA error Python entrenar Python modelo Matriz Lista datos modelo variable entrenar clase modelo Datos modelo PYTHON lista LISTA datos función error modelo MODELO MODELO función python gráfico clase modelo lista python gráfico python lista datos datos ENTRENAR Datos", "reto1_preguntas": [{"id": "r1a", "label": "¿Cuál es la palabra más frecuente?", "opts": ["python", "datos", "modelo", "error", "lista"]}, {"id": "r1b", "label": "¿Cuántas veces aparece esa palabra?", "opts": ["14", "22", "109", "23", "17", "24"]}, {"id": "r1c", "label": "¿Cuántas palabras DISTINTAS tiene el texto (ignorando mayúsculas)?", "opts": ["13", "12", "30", "11", "109", "14"]}]}</script>
 <script>
 /* =========================================================================
    CONFIGURACIÓN — lo único que la coordinación debe editar
@@ -198,7 +198,6 @@ const state = {
   integridad: false,
   respuestasI: new Array(DATA.preguntas.length).fill(null),
   respuestasReto1: {},   // { r1a: idx, r1b: idx, r1c: idx }
-  respuestaReto2: null,
   step: 0,
 };
 
@@ -206,12 +205,11 @@ const state = {
 // Paso 0: portada + integridad
 // Paso 1: datos del postulante
 // Pasos 2..5: Parte I en bloques de 5 preguntas (20 -> 4 bloques)
-// Paso 6: Reto 1
-// Paso 7: Reto 2
-// Paso 8: confirmación / envío
+// Paso 6: Reto (palabra más frecuente)
+// Paso 7: confirmación / envío
 
 const BLOQUES_PARTE1 = chunk(DATA.preguntas.map((p, i) => i), 5); // [[0..4],[5..9],[10..14],[15..19]]
-const TOTAL_STEPS = 2 + BLOQUES_PARTE1.length + 2 + 1;
+const TOTAL_STEPS = 2 + BLOQUES_PARTE1.length + 1 + 1;
 
 function chunk(arr, n) {
   const out = [];
@@ -237,7 +235,6 @@ function render() {
   const bloqueIdx = state.step - 2;
   if (bloqueIdx >= 0 && bloqueIdx < BLOQUES_PARTE1.length) return renderParteI(bloqueIdx);
   if (state.step === 2 + BLOQUES_PARTE1.length) return renderReto1();
-  if (state.step === 2 + BLOQUES_PARTE1.length + 1) return renderReto2();
   return renderEnvio();
 }
 
@@ -253,16 +250,17 @@ function renderPortada() {
   const card = el(`
     <div class="card">
       <h2>Antes de empezar</h2>
-      <p>Este diagnóstico ayuda a la coordinación de la Maestría en Ciencia de Datos e Inteligencia Artificial a conocer tu nivel actual de programación. No requiere instalar nada.</p>
+      <p>Este autodiagnóstico ayuda a la coordinación de la Maestría en Ciencia de Datos e Inteligencia Artificial a conocer tu nivel actual de programación. No requiere instalar nada.</p>
       <div class="hero-meta">
         <span class="pill">~45 minutos</span>
-        <span class="pill">24 preguntas</span>
+        <span class="pill">23 preguntas</span>
+        <span class="pill">100 puntos</span>
         <span class="pill">Cualquier lenguaje de programación</span>
       </div>
-      <p class="muted">La mayor parte se responde marcando una opción. En dos ejercicios cortos deberás escribir y ejecutar un programa (en el lenguaje que prefieras, o en un compilador en línea) y luego indicar aquí el resultado que obtuviste.</p>
+      <p class="muted">La mayor parte se responde marcando una opción. En un ejercicio corto deberás escribir y ejecutar un programa (en el lenguaje que prefieras, o en un compilador en línea) y luego indicar aquí el resultado que obtuviste.</p>
       <div class="check-row">
         <input type="checkbox" id="chkIntegridad">
-        <label for="chkIntegridad">Confirmo que resolveré esta evaluación por mi cuenta, <strong>sin apoyo de internet ni de herramientas de inteligencia artificial generativa</strong> (buscadores, asistentes de IA, generadores de código, etc.).</label>
+        <label for="chkIntegridad">Confirmo que resolveré este autodiagnóstico por mi cuenta, <strong>sin apoyo de internet ni de herramientas de inteligencia artificial generativa</strong> (buscadores, asistentes de IA, generadores de código, etc.).</label>
       </div>
       <div class="err" id="errPortada">Marca la casilla para continuar.</div>
       <div class="nav-row" style="justify-content:flex-end;">
@@ -291,7 +289,7 @@ function renderDatos() {
       <input type="text" id="inpNombre" placeholder="Tu nombre completo" autocomplete="name">
       <label class="field-label">Correo electrónico</label>
       <input type="email" id="inpEmail" placeholder="tucorreo@ejemplo.com" autocomplete="email">
-      <label class="field-label">Lenguaje de programación con el que resolverás los ejercicios cortos</label>
+      <label class="field-label">Lenguaje de programación con el que resolverás el ejercicio corto</label>
       <select id="selLenguaje">
         <option value="">Selecciona una opción</option>
         <option>Python</option><option>Java</option><option>JavaScript / TypeScript</option>
@@ -387,26 +385,28 @@ function renderParteI(bloqueIdx) {
   });
 }
 
-/* ---------------- Paso 6: Reto 1 ---------------- */
+/* ---------------- Paso 6: Reto ---------------- */
 function renderReto1() {
   app.innerHTML = '';
   const card = el(`
     <div class="card">
-      <h2>Parte II — Reto 1: Palabra más frecuente</h2>
+      <h2>Parte II — Reto: Palabra más frecuente</h2>
       <p>Programa una solución que cuente cuántas veces aparece cada palabra del siguiente texto, <strong>sin distinguir mayúsculas de minúsculas</strong> (por ejemplo, "Datos", "DATOS" y "datos" cuentan como la misma palabra). Las palabras están separadas por un espacio. Ejecuta tu programa con este texto exacto y responde con el resultado que obtengas.</p>
       <div class="story mono">${escapeHtml(DATA.reto1_texto)}</div>
       <div id="r1Container"></div>
       <div class="err" id="errReto1">Responde las tres preguntas para continuar.</div>
       <div class="nav-row">
         <button class="ghost" id="btnBack">Atrás</button>
-        <button class="primary" id="btnNext">Continuar</button>
+        <button class="primary" id="btnNext">Enviar respuestas</button>
       </div>
     </div>
   `);
   const c = card.querySelector('#r1Container');
+  const PTS_RETO = { r1a: 7, r1b: 7, r1c: 6 };
   DATA.reto1_preguntas.forEach((rp) => {
     const block = el(`
       <div class="q-block">
+        <div class="q-index">${PTS_RETO[rp.id]} puntos</div>
         <div class="q-text">${escapeHtml(rp.label)}</div>
         <div class="opts"></div>
       </div>
@@ -429,46 +429,6 @@ function renderReto1() {
   card.querySelector('#btnNext').addEventListener('click', () => {
     const ok = DATA.reto1_preguntas.every(rp => state.respuestasReto1[rp.id] !== undefined);
     if (!ok) { card.querySelector('#errReto1').classList.add('show'); return; }
-    state.step += 1; render();
-  });
-}
-
-/* ---------------- Paso 7: Reto 2 ---------------- */
-function renderReto2() {
-  app.innerHTML = '';
-  const listado = DATA.reto2_cadenas.map((c, i) => `${i + 1}) ${c}`).join('\n');
-  const card = el(`
-    <div class="card">
-      <h2>Parte II — Reto 2: Paréntesis balanceados</h2>
-      <p>Una cadena de paréntesis está <strong>balanceada</strong> si cada "(" se cierra con un ")" posterior y en ningún punto del recorrido hay más ")" que "(" hasta ese momento. Por ejemplo, "(()())" está balanceada, pero "())(" no lo está aunque tenga la misma cantidad de "(" y ")".</p>
-      <p>Programa una solución y aplícala a estas 8 cadenas:</p>
-      <div class="story mono">${escapeHtml(listado)}</div>
-      <div class="q-block" style="border-top:none;padding-top:0;margin-top:0;">
-        <div class="q-text">${escapeHtml(DATA.reto2_pregunta.label)}</div>
-        <div class="opts" id="r2opts"></div>
-      </div>
-      <div class="err" id="errReto2">Selecciona una respuesta para continuar.</div>
-      <div class="nav-row">
-        <button class="ghost" id="btnBack">Atrás</button>
-        <button class="primary" id="btnNext">Continuar</button>
-      </div>
-    </div>
-  `);
-  const optsWrap = card.querySelector('#r2opts');
-  DATA.reto2_pregunta.opts.forEach((optText, oi) => {
-    const opt = el(`<label class="opt"><input type="radio" name="r2a" value="${oi}"><span>${escapeHtml(optText)}</span></label>`);
-    if (state.respuestaReto2 === oi) { opt.classList.add('selected'); opt.querySelector('input').checked = true; }
-    opt.addEventListener('click', () => {
-      state.respuestaReto2 = oi;
-      optsWrap.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-      opt.classList.add('selected');
-    });
-    optsWrap.appendChild(opt);
-  });
-  app.appendChild(card);
-  card.querySelector('#btnBack').addEventListener('click', () => { state.step -= 1; render(); });
-  card.querySelector('#btnNext').addEventListener('click', () => {
-    if (state.respuestaReto2 === null) { card.querySelector('#errReto2').classList.add('show'); return; }
     state.step += 1; render();
     enviar();
   });
@@ -498,7 +458,6 @@ async function enviar() {
     experiencia: state.experiencia,
     respuestasParteI: state.respuestasI,
     respuestasReto1: state.respuestasReto1,
-    respuestaReto2: state.respuestaReto2,
   };
 
   const card = document.getElementById('confirmCard');
@@ -519,12 +478,11 @@ async function enviar() {
     card.innerHTML = `
       <div class="icon">✅</div>
       <h2>Gracias, ${escapeHtml(state.nombre.split(' ')[0] || '')}</h2>
-      <p>Tu evaluación diagnóstica fue registrada correctamente.</p>
+      <p>Tu autodiagnóstico fue registrado correctamente.</p>
       <div class="score-total"><span>${r.total}</span>/100</div>
       <div class="score-rows">
         ${fila('Parte I · Selección múltiple', r.parte1, 80)}
-        ${fila('Reto 1 · Palabra más frecuente', r.reto1, 15)}
-        ${fila('Reto 2 · Paréntesis balanceados', r.reto2, 5)}
+        ${fila('Parte II · Reto de programación', r.reto1, 20)}
       </div>
       <p class="muted">La coordinación de la maestría revisará los resultados como parte de tu proceso de postulación.</p>
     `;
