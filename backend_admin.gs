@@ -34,6 +34,10 @@
  *  - 4 preguntas de conteo (Reto 1: 3 preguntas · Reto 2: 1 pregunta), 5 pts c/u = 20 pts.
  */
 
+// ID de la Google Sheet donde se guardan los resultados. Es el texto entre
+// /d/ y /edit en la URL de la hoja:
+//   https://docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit
+const SHEET_ID = '';
 const SHEET_NAME = 'Respuestas';
 const PTS_MC = 4;
 const PTS_RETO = 5;
@@ -99,19 +103,14 @@ function calcularPuntaje(body) {
 }
 
 /**
- * Si el script está vinculado a una hoja (Extensiones → Apps Script), usa esa.
- * Si es un script independiente, crea una hoja la primera vez, guarda su ID en
- * las propiedades del script y la reutiliza en los envíos siguientes.
+ * Usa la hoja indicada en SHEET_ID; si está vacío, la hoja vinculada al script
+ * (cuando se creó desde Extensiones → Apps Script).
  */
 function getSpreadsheet() {
+  if (SHEET_ID) return SpreadsheetApp.openById(SHEET_ID);
   const active = SpreadsheetApp.getActiveSpreadsheet();
   if (active) return active;
-  const props = PropertiesService.getScriptProperties();
-  const id = props.getProperty('SHEET_ID');
-  if (id) return SpreadsheetApp.openById(id);
-  const ss = SpreadsheetApp.create('Resultados — Evaluación Diagnóstica');
-  props.setProperty('SHEET_ID', ss.getId());
-  return ss;
+  throw new Error('Configura SHEET_ID con el ID de la Google Sheet de resultados.');
 }
 
 function getOrCreateSheet() {
