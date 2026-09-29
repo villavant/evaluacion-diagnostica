@@ -119,6 +119,14 @@
 
   .confirm-box{text-align:center;padding:48px 24px;}
   .confirm-box .icon{font-size:52px;margin-bottom:12px;}
+  .score-total{font-size:20px;font-weight:600;color:var(--muted);margin:22px 0 18px;}
+  .score-total span{font-size:64px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.02em;}
+  .score-rows{text-align:left;max-width:460px;margin:0 auto 24px;display:flex;flex-direction:column;gap:12px;}
+  .score-row{display:grid;grid-template-columns:1fr 90px 48px;align-items:center;gap:12px;font-size:14px;}
+  .score-row strong{text-align:right;}
+  .score-bar{height:8px;background:var(--border);}
+  .score-bar div{height:100%;background:var(--cyan);}
+  @media (max-width:560px){.score-row{grid-template-columns:1fr 48px;}.score-bar{grid-column:1/-1;grid-row:2;}}
 
   /* ---------- Footer ---------- */
   footer.foot{background:var(--black);color:#A3A2A2;font-size:13px;margin-top:40px;}
@@ -172,11 +180,11 @@
 /* =========================================================================
    CONFIGURACIÓN — lo único que la coordinación debe editar
    ========================================================================= */
-// Pega aquí la URL del Web App de Apps Script (ver backend_admin.gs) una vez
-// que lo despliegues. Mientras esté vacío, el formulario funciona igual
-// (puedes revisarlo de principio a fin) pero al final mostrará un aviso
-// en vez de guardar el resultado.
-const API_URL = "https://script.google.com/macros/s/AKfycbykfVxToGKzrGZUXWRfpJsSv9lJ66hjVj0LPXiQk6EJzqT7SmNtCPrqsFSN-x6awLVwCw/exec"; // ejemplo: "https://script.google.com/macros/s/AKfycb.../exec"
+// Proyecto de Supabase que califica y guarda los envíos (función
+// enviar_evaluacion). La clave publicable es pública por diseño: solo permite
+// llamar esa función, no leer resultados ni la clave de respuestas.
+const SUPABASE_URL = "https://blgcpoqhrjuvllmgwhhx.supabase.co";
+const SUPABASE_KEY = "sb_publishable_EXXR3IpFmc7ksMDjmOhitA_TYRrsUZg";
 
 /* ========================================================================= */
 
@@ -481,30 +489,34 @@ async function enviar() {
     respuestasParteI: state.respuestasI,
     respuestasReto1: state.respuestasReto1,
     respuestaReto2: state.respuestaReto2,
-    fecha: new Date().toISOString(),
   };
 
   const card = document.getElementById('confirmCard');
-  if (!API_URL) {
-    card.innerHTML = `
-      <div class="icon">⚠️</div>
-      <h2>Falta conectar el registro de resultados</h2>
-      <p>El formulario funcionó correctamente, pero aún no se ha configurado la URL del Web App que guarda las respuestas (constante <code>API_URL</code> en index.html). Este envío no quedó registrado.</p>
-    `;
-    return;
-  }
-
   try {
-    await fetch(API_URL, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/enviar_evaluacion`, {
       method: 'POST',
-      mode: 'no-cors', // Apps Script Web Apps no siempre exponen CORS; el registro igual se guarda
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY },
+      body: JSON.stringify({ p: payload }),
     });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const r = await res.json();
+    const fila = (label, pts, max) => `
+      <div class="score-row">
+        <span>${label}</span>
+        <div class="score-bar"><div style="width:${Math.round((pts / max) * 100)}%"></div></div>
+        <strong>${pts}/${max}</strong>
+      </div>`;
     card.innerHTML = `
       <div class="icon">✅</div>
       <h2>Gracias, ${escapeHtml(state.nombre.split(' ')[0] || '')}</h2>
-      <p>Tu evaluación diagnóstica fue registrada correctamente. La coordinación de la maestría revisará los resultados como parte de tu proceso de postulación.</p>
+      <p>Tu evaluación diagnóstica fue registrada correctamente.</p>
+      <div class="score-total"><span>${r.total}</span>/100</div>
+      <div class="score-rows">
+        ${fila('Parte I · Selección múltiple', r.parte1, 80)}
+        ${fila('Reto 1 · Palabra más frecuente', r.reto1, 15)}
+        ${fila('Reto 2 · Paréntesis balanceados', r.reto2, 5)}
+      </div>
+      <p class="muted">La coordinación de la maestría revisará los resultados como parte de tu proceso de postulación.</p>
     `;
   } catch (err) {
     card.innerHTML = `
