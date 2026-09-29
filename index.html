@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evaluación Diagnóstica de Programación — Maestría en Ciencia de Datos e IA | UTEC Posgrado</title>
+<style>
+  :root{
+    --navy:#0B2E4F;
+    --navy-dark:#071F38;
+    --cyan:#00AEEF;
+    --cyan-dark:#0090C8;
+    --bg:#F4F7FA;
+    --card:#FFFFFF;
+    --text:#1B2733;
+    --muted:#5B6B7A;
+    --border:#E1E8EE;
+    --danger:#C0392B;
+    --radius:14px;
+    --shadow:0 2px 10px rgba(11,46,79,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.5;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 60px;}
+  header.top{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-dark) 100%);
+    color:#fff;padding:22px 18px;
+  }
+  header.top .inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  header.top .brand{font-weight:700;letter-spacing:.5px;font-size:14px;opacity:.9;text-transform:uppercase;}
+  header.top .brand small{display:block;font-weight:400;opacity:.75;text-transform:none;letter-spacing:0;font-size:12px;margin-top:2px;}
+  .progress-outer{height:6px;background:rgba(255,255,255,.18);border-radius:4px;margin-top:14px;overflow:hidden;}
+  .progress-inner{height:100%;background:var(--cyan);width:0%;transition:width .3s ease;}
+  .progress-label{font-size:12px;opacity:.85;margin-top:6px;}
+
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 26px;margin-top:22px;border:1px solid var(--border);}
+  h1{font-size:26px;margin:0 0 10px;color:var(--navy);}
+  h2{font-size:19px;margin:0 0 14px;color:var(--navy);}
+  p{margin:0 0 14px;color:var(--text);}
+  .muted{color:var(--muted);font-size:14px;}
+  .pill{display:inline-block;background:#EAF7FE;color:var(--cyan-dark);font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;margin-right:6px;margin-bottom:6px;}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px;}
+
+  label.field-label{display:block;font-weight:600;font-size:14px;margin:0 0 6px;color:var(--navy);}
+  input[type="text"], input[type="email"], select{
+    width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;font-size:15px;
+    background:#fff;color:var(--text);margin-bottom:18px;
+  }
+  input:focus, select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,174,239,.15);}
+
+  .check-row{display:flex;align-items:flex-start;gap:10px;background:#FBF8EF;border:1px solid #F0E4BE;border-radius:10px;padding:14px;margin:18px 0;}
+  .check-row input{margin-top:3px;width:18px;height:18px;flex:none;}
+  .check-row label{font-size:13.5px;color:#6b5a1f;}
+
+  .q-block{border-top:1px solid var(--border);padding-top:18px;margin-top:18px;}
+  .q-block:first-child{border-top:none;padding-top:0;margin-top:0;}
+  .q-index{font-size:12px;font-weight:700;color:var(--cyan-dark);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
+  .q-text{font-size:15.5px;font-weight:600;margin-bottom:10px;color:var(--text);}
+  pre.code{
+    background:#0B2E4F;color:#CFE9F7;padding:12px 14px;border-radius:10px;font-size:13px;
+    overflow-x:auto;margin:0 0 12px;font-family:"SF Mono",Consolas,Menlo,monospace;line-height:1.5;
+  }
+  .opts{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:10px;
+    padding:10px 12px;cursor:pointer;font-size:14.5px;transition:.15s;background:#fff;
+  }
+  .opt:hover{border-color:var(--cyan);}
+  .opt.selected{border-color:var(--cyan);background:#EAF7FE;}
+  .opt input{margin:0;}
+
+  .story{background:#F0F6FA;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:14.5px;white-space:pre-wrap;word-break:break-word;}
+  .story.mono{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:13px;line-height:1.7;}
+
+  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px;}
+  button{
+    font-family:inherit;font-size:15px;font-weight:600;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;
+    transition:.15s;
+  }
+  button.primary{background:var(--cyan);color:#fff;}
+  button.primary:hover{background:var(--cyan-dark);}
+  button.primary:disabled{background:#B9CBD6;cursor:not-allowed;}
+  button.ghost{background:transparent;color:var(--navy);border:1px solid var(--border);}
+  button.ghost:hover{border-color:var(--navy);}
+  .err{color:var(--danger);font-size:13px;margin-top:6px;display:none;}
+  .err.show{display:block;}
+
+  .confirm-box{text-align:center;padding:40px 20px;}
+  .confirm-box .icon{font-size:52px;margin-bottom:10px;}
+
+  footer.foot{max-width:760px;margin:30px auto 0;padding:0 18px;color:var(--muted);font-size:12.5px;text-align:center;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="inner">
+    <div class="brand">UTEC Posgrado
+      <small>Maestría en Ciencia de Datos e Inteligencia Artificial</small>
+    </div>
+    <div class="brand" style="text-align:right;">Evaluación Diagnóstica
+      <small id="stepLabelTop">de Programación</small>
+    </div>
+  </div>
+  <div class="progress-outer"><div class="progress-inner" id="progressBar"></div></div>
+  <div class="progress-label" id="progressLabel">Paso 1</div>
+</header>
+
+<div class="wrap">
+  <div id="app"></div>
+</div>
+
+<footer class="foot">
+  UTEC Posgrado — Este formulario es de uso interno para el proceso de admisión de la Maestría en Ciencia de Datos e Inteligencia Artificial.
+</footer>
+
+<script id="exam-data" type="application/json">{"preguntas": [{"tema": "Tipos y operadores", "q": "¿Cuál es el resultado de la división entera 17 // 5 y del residuo 17 % 5?", "code": null, "opts": ["3 y 2", "3.4 y 0", "2 y 3", "4 y 2"]}, {"tema": "Operadores lógicos", "q": "Dado a = 4 y b = 7, ¿cuál es el valor de la expresión (a < b) AND NOT (a == 4)?", "code": null, "opts": ["Verdadero", "Falso", "Error de sintaxis", "Depende del lenguaje"]}, {"tema": "Condicionales y bucles", "q": "¿Qué valor se imprime?", "code": "total = 0\npara i desde 1 hasta 6 hacer\n  si i es impar entonces\n    total = total + i\n  fin si\nfin para\nimprimir total", "opts": ["21", "12", "9", "6"]}, {"tema": "Bucles anidados", "q": "¿Qué valor se imprime?", "code": "contador = 0\npara i desde 1 hasta 3 hacer\n  para j desde 1 hasta i hacer\n    contador = contador + 1\n  fin para\nfin para\nimprimir contador", "opts": ["3", "9", "12", "6"]}, {"tema": "Bucle while", "q": "¿Cuántas veces se ejecuta el cuerpo del bucle? (// es división entera)", "code": "n = 10\nmientras n > 1 hacer\n  n = n // 2\nfin mientras", "opts": ["3", "2", "4", "5"]}, {"tema": "Condicionales", "q": "¿Qué se imprime?", "code": "x = 15\nsi x > 10 entonces\n  imprimir \"A\"\nfin si\nsi x > 5 entonces\n  imprimir \"B\"\nsino\n  imprimir \"C\"\nfin si", "opts": ["Solo A", "Solo B", "A y B", "A, B y C"]}, {"tema": "Funciones y paso por valor", "q": "Los números se pasan por valor. ¿Qué imprime este código?", "code": "función duplicar(n)\n  n = n * 2\n  retornar n\nfin función\n\nx = 5\ny = duplicar(x)\nimprimir x, y", "opts": ["10 y 10", "5 y 5", "10 y 5", "5 y 10"]}, {"tema": "Funciones y retorno", "q": "¿Qué valor se imprime?", "code": "función f(a, b)\n  retornar a - b\nfin función\n\nimprimir f(10, 4) + f(4, 10)", "opts": ["12", "0", "6", "-12"]}, {"tema": "Listas (slicing)", "q": "Dada lista = [10, 20, 30, 40, 50] (índices desde 0), ¿qué contiene lista[1:4], donde el índice final es excluyente?", "code": null, "opts": ["[10, 20, 30, 40]", "[20, 30, 40, 50]", "[20, 30]", "[20, 30, 40]"]}, {"tema": "Listas (operaciones)", "q": "¿Qué contiene la lista al final?", "code": "lista = [3, 8, 1]\nlista.agregar_al_final(5)\nlista.eliminar_posicion(0)\nimprimir lista", "opts": ["[3, 8, 1]", "[8, 1, 5]", "[8, 1]", "[3, 1, 5]"]}, {"tema": "Strings", "q": "Dado texto = \"datos\", ¿qué se obtiene al tomar solo los caracteres de las posiciones 0, 2 y 4 (base 0)?", "code": null, "opts": ["\"dts\"", "\"atos\"", "\"aos\"", "\"dato\""]}, {"tema": "Diccionarios", "q": "¿Qué se imprime?", "code": "d = {\"a\": 1, \"b\": 2}\nd[\"c\"] = 3\nd[\"a\"] = d[\"a\"] + 10\nimprimir d[\"a\"], tamaño(d)", "opts": ["1 y 2", "10 y 3", "11 y 2", "11 y 3"]}, {"tema": "Conjuntos (sets)", "q": "Se tiene una lista de 10,000 IDs de clientes con duplicados y se desea quedarse solo con los valores únicos. ¿Qué estructura es la más adecuada?", "code": null, "opts": ["Pila", "Cola", "Conjunto (set)", "Matriz"]}, {"tema": "Recursión", "q": "¿Qué valor se imprime?", "code": "función suma(n)\n  si n == 0 entonces\n    retornar 0\n  fin si\n  retornar n + suma(n - 1)\nfin función\n\nimprimir suma(4)", "opts": ["4", "24", "0", "10"]}, {"tema": "Recursión (caso base)", "q": "En una función recursiva, ¿para qué sirve el \"caso base\"?", "code": null, "opts": ["Para acelerar la ejecución", "Para detener la recursión cuando se llega al caso más simple", "Para declarar las variables", "Para evitar usar parámetros"]}, {"tema": "Complejidad", "q": "Recorrer una sola vez una lista de n elementos para sumar todos sus valores tiene una complejidad de:", "code": null, "opts": ["O(1)", "O(log n)", "O(n)", "O(n²)"]}, {"tema": "Eficiencia de búsqueda", "q": "Se busca un valor en una lista ORDENADA de 1,000,000 de números. ¿Qué estrategia es la más eficiente?", "code": null, "opts": ["Recorrerla elemento por elemento desde el inicio", "Búsqueda binaria: descartar la mitad de la lista en cada paso", "Copiarla a otra lista y recorrer la copia", "Todas tardan lo mismo"]}, {"tema": "Depuración (caso borde)", "q": "Este código calcula el promedio de una lista. ¿En qué caso falla?", "code": "suma = 0\npara cada x en lista hacer\n  suma = suma + x\nfin para\npromedio = suma / tamaño(lista)", "opts": ["Una lista con números negativos", "Una lista con decimales", "Una lista con un solo elemento", "Una lista vacía"]}, {"tema": "Depuración (bucle)", "q": "Se quiere imprimir los números del 1 al 5. ¿Qué ocurre con este código?", "code": "i = 1\nmientras i <= 5 hacer\n  imprimir i\nfin mientras", "opts": ["Imprime del 1 al 4", "Imprime del 1 al 5 y termina", "Bucle infinito: i nunca se incrementa", "Error de sintaxis"]}, {"tema": "Depuración (lógica)", "q": "Este código busca el mayor valor de una lista de enteros. ¿En qué caso da un resultado incorrecto?", "code": "mayor = 0\npara cada x en lista hacer\n  si x > mayor entonces\n    mayor = x\n  fin si\nfin para\nretornar mayor", "opts": ["Una lista con solo números negativos", "Una lista con números repetidos", "Una lista con ceros y positivos", "Nunca falla"]}], "reto1_texto": "ENTRENAR modelo gráfico Matriz Entrenar modelo Variable datos modelo Datos lista python variable python datos función variable datos Matriz ERROR Entrenar entrenar entrenar Modelo variable función función python DATOS variable prueba error FUNCIÓN Clase ENTRENAR matriz Datos Variable datos Prueba datos MODELO python entrenar lista matriz python gráfico error datos modelo variable datos FUNCIÓN Datos Error variable modelo función datos Datos Modelo Datos entrenar clase datos Modelo datos PYTHON PYTHON PRUEBA error Python entrenar Python modelo Matriz Lista datos modelo variable entrenar clase modelo Datos modelo PYTHON lista LISTA datos función error modelo MODELO MODELO función python gráfico clase modelo lista python gráfico python lista datos datos ENTRENAR Datos", "reto1_preguntas": [{"id": "r1a", "label": "¿Cuál es la palabra más frecuente?", "opts": ["python", "datos", "modelo", "error", "lista"]}, {"id": "r1b", "label": "¿Cuántas veces aparece esa palabra?", "opts": ["14", "22", "109", "23", "17", "24"]}, {"id": "r1c", "label": "¿Cuántas palabras DISTINTAS tiene el texto (ignorando mayúsculas)?", "opts": ["13", "12", "30", "11", "109", "14"]}], "reto2_cadenas": ["(()(()()()((()(()())((()()()((((()(((()(()))))))))))))))", ")(()((((())))))((()()(()))(()))((()())(()((())(()(())((())))())())", "(()()())()()()()()()()()(()((()()((((((()())(()))))))))", "(()())(()(()((()((()((()(())))())((()))((()(())(()))))()(())))))", "(()(())(()()())())(((()((((((((()((())))((()())((()))()(())))))))))))))", ")((())((()))((((()(((()(((()()()()((()((()(()()()()))))))(())())))))))))", "()((()()(())((((()(())(()(()()))())())((())((((((()(((((()))))))))))))))))", "((()())()()()(()))()()(())()()()()(()(()()()(())))()((())))(()()(()())"], "reto2_pregunta": {"id": "r2a", "label": "¿Cuántas de las 8 cadenas están balanceadas?", "opts": ["3", "4", "2", "5", "8", "6"]}}</script>
+<script>
+/* =========================================================================
+   CONFIGURACIÓN — lo único que la coordinación debe editar
+   ========================================================================= */
+// Pega aquí la URL del Web App de Apps Script (ver backend_admin.gs) una vez
+// que lo despliegues. Mientras esté vacío, el formulario funciona igual
+// (puedes revisarlo de principio a fin) pero al final mostrará un aviso
+// en vez de guardar el resultado.
+const API_URL = ""; // ejemplo: "https://script.google.com/macros/s/AKfycb.../exec"
+
+/* ========================================================================= */
+
+const DATA = JSON.parse(document.getElementById('exam-data').textContent);
+
+const state = {
+  nombre: "",
+  lenguaje: "",
+  experiencia: "",
+  integridad: false,
+  respuestasI: new Array(DATA.preguntas.length).fill(null),
+  respuestasReto1: {},   // { r1a: idx, r1b: idx, r1c: idx }
+  respuestaReto2: null,
+  step: 0,
+};
+
+// --- construcción de pasos ---
+// Paso 0: portada + integridad
+// Paso 1: datos del postulante
+// Pasos 2..5: Parte I en bloques de 5 preguntas (20 -> 4 bloques)
+// Paso 6: Reto 1
+// Paso 7: Reto 2
+// Paso 8: confirmación / envío
+
+const BLOQUES_PARTE1 = chunk(DATA.preguntas.map((p, i) => i), 5); // [[0..4],[5..9],[10..14],[15..19]]
+const TOTAL_STEPS = 2 + BLOQUES_PARTE1.length + 2 + 1;
+
+function chunk(arr, n) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n));
+  return out;
+}
+
+const app = document.getElementById('app');
+const progressBar = document.getElementById('progressBar');
+const progressLabel = document.getElementById('progressLabel');
+
+function updateProgress() {
+  const pct = Math.round((state.step / (TOTAL_STEPS - 1)) * 100);
+  progressBar.style.width = pct + '%';
+  progressLabel.textContent = `Paso ${state.step + 1} de ${TOTAL_STEPS}`;
+}
+
+function render() {
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  if (state.step === 0) return renderPortada();
+  if (state.step === 1) return renderDatos();
+  const bloqueIdx = state.step - 2;
+  if (bloqueIdx >= 0 && bloqueIdx < BLOQUES_PARTE1.length) return renderParteI(bloqueIdx);
+  if (state.step === 2 + BLOQUES_PARTE1.length) return renderReto1();
+  if (state.step === 2 + BLOQUES_PARTE1.length + 1) return renderReto2();
+  return renderEnvio();
+}
+
+function el(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+
+/* ---------------- Paso 0: Portada ---------------- */
+function renderPortada() {
+  app.innerHTML = '';
+  const card = el(`
+    <div class="card">
+      <h1>Evaluación Diagnóstica de Programación</h1>
+      <p>Este diagnóstico ayuda a la coordinación de la Maestría en Ciencia de Datos e Inteligencia Artificial a conocer tu nivel actual de programación. No requiere instalar nada.</p>
+      <div class="hero-meta">
+        <span class="pill">~45 minutos</span>
+        <span class="pill">24 preguntas</span>
+        <span class="pill">Cualquier lenguaje de programación</span>
+      </div>
+      <p class="muted">La mayor parte se responde marcando una opción. En dos ejercicios cortos deberás escribir y ejecutar un programa (en el lenguaje que prefieras, o en un compilador en línea) y luego indicar aquí el resultado que obtuviste.</p>
+      <div class="check-row">
+        <input type="checkbox" id="chkIntegridad">
+        <label for="chkIntegridad">Confirmo que resolveré esta evaluación por mi cuenta, <strong>sin apoyo de internet ni de herramientas de inteligencia artificial generativa</strong> (buscadores, asistentes de IA, generadores de código, etc.).</label>
+      </div>
+      <div class="err" id="errPortada">Marca la casilla para continuar.</div>
+      <div class="nav-row" style="justify-content:flex-end;">
+        <button class="primary" id="btnStart">Comenzar</button>
+      </div>
+    </div>
+  `);
+  app.appendChild(card);
+  const chk = card.querySelector('#chkIntegridad');
+  chk.checked = state.integridad;
+  card.querySelector('#btnStart').addEventListener('click', () => {
+    if (!chk.checked) { card.querySelector('#errPortada').classList.add('show'); return; }
+    state.integridad = true;
+    state.step = 1;
+    render();
+  });
+}
+
+/* ---------------- Paso 1: Datos del postulante ---------------- */
+function renderDatos() {
+  app.innerHTML = '';
+  const card = el(`
+    <div class="card">
+      <h2>Datos del postulante</h2>
+      <label class="field-label">Nombres y apellidos completos</label>
+      <input type="text" id="inpNombre" placeholder="Tu nombre completo">
+      <label class="field-label">Lenguaje de programación con el que resolverás los ejercicios cortos</label>
+      <select id="selLenguaje">
+        <option value="">Selecciona una opción</option>
+        <option>Python</option><option>Java</option><option>JavaScript / TypeScript</option>
+        <option>C / C++</option><option>C#</option><option>R</option><option>SQL</option><option>Otro</option>
+      </select>
+      <label class="field-label">Experiencia programando (aproximada)</label>
+      <select id="selExperiencia">
+        <option value="">Selecciona una opción</option>
+        <option>Menos de 1 año</option><option>De 1 a 3 años</option>
+        <option>De 3 a 5 años</option><option>Más de 5 años</option>
+      </select>
+      <div class="err" id="errDatos">Completa los tres campos para continuar.</div>
+      <div class="nav-row">
+        <button class="ghost" id="btnBack">Atrás</button>
+        <button class="primary" id="btnNext">Continuar</button>
+      </div>
+    </div>
+  `);
+  app.appendChild(card);
+  card.querySelector('#inpNombre').value = state.nombre;
+  card.querySelector('#selLenguaje').value = state.lenguaje;
+  card.querySelector('#selExperiencia').value = state.experiencia;
+
+  card.querySelector('#btnBack').addEventListener('click', () => { state.step = 0; render(); });
+  card.querySelector('#btnNext').addEventListener('click', () => {
+    const nombre = card.querySelector('#inpNombre').value.trim();
+    const lenguaje = card.querySelector('#selLenguaje').value;
+    const experiencia = card.querySelector('#selExperiencia').value;
+    if (!nombre || !lenguaje || !experiencia) { card.querySelector('#errDatos').classList.add('show'); return; }
+    state.nombre = nombre; state.lenguaje = lenguaje; state.experiencia = experiencia;
+    state.step = 2; render();
+  });
+}
+
+/* ---------------- Pasos 2..5: Parte I ---------------- */
+function renderParteI(bloqueIdx) {
+  app.innerHTML = '';
+  const idxs = BLOQUES_PARTE1[bloqueIdx];
+  const card = el(`
+    <div class="card">
+      <h2>Parte I — Selección múltiple (bloque ${bloqueIdx + 1} de ${BLOQUES_PARTE1.length})</h2>
+      <p class="muted">Cada pregunta tiene una sola respuesta correcta. El pseudocódigo usa índices desde 0 y "//" para la división entera.</p>
+      <div id="qContainer"></div>
+      <div class="err" id="errBloque">Responde todas las preguntas de este bloque para continuar.</div>
+      <div class="nav-row">
+        <button class="ghost" id="btnBack">Atrás</button>
+        <button class="primary" id="btnNext">Continuar</button>
+      </div>
+    </div>
+  `);
+  const qc = card.querySelector('#qContainer');
+  idxs.forEach((qi) => {
+    const p = DATA.preguntas[qi];
+    const block = el(`
+      <div class="q-block">
+        <div class="q-index">Pregunta ${qi + 1} de ${DATA.preguntas.length} · ${p.tema}</div>
+        <div class="q-text">${escapeHtml(p.q)}</div>
+        ${p.code ? `<pre class="code">${escapeHtml(p.code)}</pre>` : ''}
+        <div class="opts" data-qi="${qi}"></div>
+      </div>
+    `);
+    const optsWrap = block.querySelector('.opts');
+    p.opts.forEach((optText, oi) => {
+      const opt = el(`
+        <label class="opt">
+          <input type="radio" name="q${qi}" value="${oi}">
+          <span>${escapeHtml(optText)}</span>
+        </label>
+      `);
+      if (state.respuestasI[qi] === oi) { opt.classList.add('selected'); opt.querySelector('input').checked = true; }
+      opt.addEventListener('click', () => {
+        state.respuestasI[qi] = oi;
+        optsWrap.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+      optsWrap.appendChild(opt);
+    });
+    qc.appendChild(block);
+  });
+  app.appendChild(card);
+
+  card.querySelector('#btnBack').addEventListener('click', () => { state.step -= 1; render(); });
+  card.querySelector('#btnNext').addEventListener('click', () => {
+    const ok = idxs.every(qi => state.respuestasI[qi] !== null);
+    if (!ok) { card.querySelector('#errBloque').classList.add('show'); return; }
+    state.step += 1; render();
+  });
+}
+
+/* ---------------- Paso 6: Reto 1 ---------------- */
+function renderReto1() {
+  app.innerHTML = '';
+  const card = el(`
+    <div class="card">
+      <h2>Parte II — Reto 1: Palabra más frecuente</h2>
+      <p>Programa una solución que cuente cuántas veces aparece cada palabra del siguiente texto, <strong>sin distinguir mayúsculas de minúsculas</strong> (por ejemplo, "Datos", "DATOS" y "datos" cuentan como la misma palabra). Las palabras están separadas por un espacio. Ejecuta tu programa con este texto exacto y responde con el resultado que obtengas.</p>
+      <div class="story mono">${escapeHtml(DATA.reto1_texto)}</div>
+      <div id="r1Container"></div>
+      <div class="err" id="errReto1">Responde las tres preguntas para continuar.</div>
+      <div class="nav-row">
+        <button class="ghost" id="btnBack">Atrás</button>
+        <button class="primary" id="btnNext">Continuar</button>
+      </div>
+    </div>
+  `);
+  const c = card.querySelector('#r1Container');
+  DATA.reto1_preguntas.forEach((rp) => {
+    const block = el(`
+      <div class="q-block">
+        <div class="q-text">${escapeHtml(rp.label)}</div>
+        <div class="opts"></div>
+      </div>
+    `);
+    const optsWrap = block.querySelector('.opts');
+    rp.opts.forEach((optText, oi) => {
+      const opt = el(`<label class="opt"><input type="radio" name="${rp.id}" value="${oi}"><span>${escapeHtml(optText)}</span></label>`);
+      if (state.respuestasReto1[rp.id] === oi) { opt.classList.add('selected'); opt.querySelector('input').checked = true; }
+      opt.addEventListener('click', () => {
+        state.respuestasReto1[rp.id] = oi;
+        optsWrap.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+      optsWrap.appendChild(opt);
+    });
+    c.appendChild(block);
+  });
+  app.appendChild(card);
+  card.querySelector('#btnBack').addEventListener('click', () => { state.step -= 1; render(); });
+  card.querySelector('#btnNext').addEventListener('click', () => {
+    const ok = DATA.reto1_preguntas.every(rp => state.respuestasReto1[rp.id] !== undefined);
+    if (!ok) { card.querySelector('#errReto1').classList.add('show'); return; }
+    state.step += 1; render();
+  });
+}
+
+/* ---------------- Paso 7: Reto 2 ---------------- */
+function renderReto2() {
+  app.innerHTML = '';
+  const listado = DATA.reto2_cadenas.map((c, i) => `${i + 1}) ${c}`).join('\n');
+  const card = el(`
+    <div class="card">
+      <h2>Parte II — Reto 2: Paréntesis balanceados</h2>
+      <p>Una cadena de paréntesis está <strong>balanceada</strong> si cada "(" se cierra con un ")" posterior y en ningún punto del recorrido hay más ")" que "(" hasta ese momento. Por ejemplo, "(()())" está balanceada, pero "())(" no lo está aunque tenga la misma cantidad de "(" y ")".</p>
+      <p>Programa una solución y aplícala a estas 8 cadenas:</p>
+      <div class="story mono">${escapeHtml(listado)}</div>
+      <div class="q-block" style="border-top:none;padding-top:0;margin-top:0;">
+        <div class="q-text">${escapeHtml(DATA.reto2_pregunta.label)}</div>
+        <div class="opts" id="r2opts"></div>
+      </div>
+      <div class="err" id="errReto2">Selecciona una respuesta para continuar.</div>
+      <div class="nav-row">
+        <button class="ghost" id="btnBack">Atrás</button>
+        <button class="primary" id="btnNext">Continuar</button>
+      </div>
+    </div>
+  `);
+  const optsWrap = card.querySelector('#r2opts');
+  DATA.reto2_pregunta.opts.forEach((optText, oi) => {
+    const opt = el(`<label class="opt"><input type="radio" name="r2a" value="${oi}"><span>${escapeHtml(optText)}</span></label>`);
+    if (state.respuestaReto2 === oi) { opt.classList.add('selected'); opt.querySelector('input').checked = true; }
+    opt.addEventListener('click', () => {
+      state.respuestaReto2 = oi;
+      optsWrap.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+    optsWrap.appendChild(opt);
+  });
+  app.appendChild(card);
+  card.querySelector('#btnBack').addEventListener('click', () => { state.step -= 1; render(); });
+  card.querySelector('#btnNext').addEventListener('click', () => {
+    if (state.respuestaReto2 === null) { card.querySelector('#errReto2').classList.add('show'); return; }
+    state.step += 1; render();
+    enviar();
+  });
+}
+
+/* ---------------- Paso final: envío ---------------- */
+// El puntaje se calcula solo en el servidor (backend_admin.gs); la clave de
+// respuestas no se incluye en esta página.
+
+function renderEnvio() {
+  app.innerHTML = '';
+  const card = el(`
+    <div class="card confirm-box" id="confirmCard">
+      <div class="icon">⏳</div>
+      <h2>Enviando tus respuestas…</h2>
+      <p class="muted">Un momento por favor.</p>
+    </div>
+  `);
+  app.appendChild(card);
+}
+
+async function enviar() {
+  const payload = {
+    nombre: state.nombre,
+    lenguaje: state.lenguaje,
+    experiencia: state.experiencia,
+    respuestasParteI: state.respuestasI,
+    respuestasReto1: state.respuestasReto1,
+    respuestaReto2: state.respuestaReto2,
+    fecha: new Date().toISOString(),
+  };
+
+  const card = document.getElementById('confirmCard');
+  if (!API_URL) {
+    card.innerHTML = `
+      <div class="icon">⚠️</div>
+      <h2>Falta conectar el registro de resultados</h2>
+      <p>El formulario funcionó correctamente, pero aún no se ha configurado la URL del Web App que guarda las respuestas (constante <code>API_URL</code> en index.html). Este envío no quedó registrado.</p>
+    `;
+    return;
+  }
+
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Apps Script Web Apps no siempre exponen CORS; el registro igual se guarda
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+    });
+    card.innerHTML = `
+      <div class="icon">✅</div>
+      <h2>Gracias, ${escapeHtml(state.nombre.split(' ')[0] || '')}</h2>
+      <p>Tu evaluación diagnóstica fue registrada correctamente. La coordinación de la maestría revisará los resultados como parte de tu proceso de postulación.</p>
+    `;
+  } catch (err) {
+    card.innerHTML = `
+      <div class="icon">⚠️</div>
+      <h2>No se pudo registrar tu envío</h2>
+      <p>Ocurrió un problema de conexión. Por favor, avisa a la coordinación de la maestría indicando tu nombre y la hora aproximada de este intento.</p>
+    `;
+  }
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+render();
+
+</script>
+</body>
+</html>
