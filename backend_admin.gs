@@ -37,7 +37,7 @@
 // ID de la Google Sheet donde se guardan los resultados. Es el texto entre
 // /d/ y /edit en la URL de la hoja:
 //   https://docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit
-const SHEET_ID = '';
+const SHEET_ID = '1ueafJ9TOCd9M0cd6IJj_whoNtZsk7DE8VAyhMXKn2dg';
 const SHEET_NAME = 'Respuestas';
 const PTS_MC = 4;
 const PTS_RETO = 5;
