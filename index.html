@@ -4,122 +4,167 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Evaluación Diagnóstica de Programación — Maestría en Ciencia de Datos e IA | UTEC Posgrado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="assets/logo-utec-posgrado-color.svg">
 <style>
+  /* Identidad visual UTEC Posgrado: Space Grotesk, cian #00E1FF, carbón #1E1C1D */
   :root{
-    --navy:#0B2E4F;
-    --navy-dark:#071F38;
-    --cyan:#00AEEF;
-    --cyan-dark:#0090C8;
-    --bg:#F4F7FA;
+    --ink:#1E1C1D;
+    --black:#050505;
+    --graphite:#4E4B4C;
+    --cyan:#00E1FF;
+    --cyan-deep:#00A9C2;
+    --cyan-tint:#E5FCFF;
+    --bg:#F8F8F8;
     --card:#FFFFFF;
-    --text:#1B2733;
-    --muted:#5B6B7A;
-    --border:#E1E8EE;
-    --danger:#C0392B;
-    --radius:14px;
-    --shadow:0 2px 10px rgba(11,46,79,0.08);
+    --text:#1E1C1D;
+    --muted:#6B6869;
+    --border:#E4E4E4;
+    --danger:#C62828;
+    --radius:4px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-family:"Space Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
     background:var(--bg);
     color:var(--text);
-    line-height:1.5;
-    padding-top:env(safe-area-inset-top,0px);
+    line-height:1.55;
     padding-bottom:env(safe-area-inset-bottom,0px);
   }
-  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 60px;}
-  header.top{
-    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-dark) 100%);
-    color:#fff;padding:22px 18px;
-  }
-  header.top .inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  header.top .brand{font-weight:700;letter-spacing:.5px;font-size:14px;opacity:.9;text-transform:uppercase;}
-  header.top .brand small{display:block;font-weight:400;opacity:.75;text-transform:none;letter-spacing:0;font-size:12px;margin-top:2px;}
-  .progress-outer{height:6px;background:rgba(255,255,255,.18);border-radius:4px;margin-top:14px;overflow:hidden;}
-  .progress-inner{height:100%;background:var(--cyan);width:0%;transition:width .3s ease;}
-  .progress-label{font-size:12px;opacity:.85;margin-top:6px;}
 
-  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 26px;margin-top:22px;border:1px solid var(--border);}
-  h1{font-size:26px;margin:0 0 10px;color:var(--navy);}
-  h2{font-size:19px;margin:0 0 14px;color:var(--navy);}
+  /* ---------- Header ---------- */
+  header.top{background:var(--black);color:#fff;padding-top:env(safe-area-inset-top,0px);position:sticky;top:0;z-index:10;}
+  header.top .inner{max-width:880px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  header.top .logo{height:40px;width:auto;display:block;}
+  header.top .step{font-size:13px;color:#A3A2A2;text-align:right;line-height:1.3;}
+  header.top .step strong{display:block;color:#fff;font-weight:600;font-size:14px;}
+  .progress-outer{height:3px;background:#2B2B2B;}
+  .progress-inner{height:100%;background:var(--cyan);width:0%;transition:width .35s ease;}
+
+  /* ---------- Hero ---------- */
+  .hero{background:var(--ink);color:#fff;position:relative;overflow:hidden;}
+  .hero::before,.hero::after{content:"";position:absolute;background:var(--cyan);transform:skewY(-28deg);}
+  .hero::before{right:-40px;top:-30px;width:110px;height:220px;opacity:.9;}
+  .hero::after{right:90px;top:40px;width:36px;height:140px;opacity:.35;}
+  .hero .inner{max-width:880px;margin:0 auto;padding:34px 20px 38px;position:relative;z-index:1;}
+  .hero .eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin:0 0 10px;}
+  .hero h1{font-size:clamp(26px,5vw,40px);line-height:1.1;font-weight:700;margin:0;color:#fff;max-width:620px;letter-spacing:-.01em;}
+
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 60px;}
+  #app{max-width:760px;}
+
+  /* ---------- Cards y texto ---------- */
+  .card{background:var(--card);border-radius:var(--radius);padding:32px 30px;margin-top:28px;border:1px solid var(--border);border-top:4px solid var(--cyan);}
+  h1{font-size:28px;line-height:1.15;margin:0 0 12px;color:var(--ink);font-weight:700;letter-spacing:-.01em;}
+  h2{font-size:22px;line-height:1.2;margin:0 0 14px;color:var(--ink);font-weight:700;}
   p{margin:0 0 14px;color:var(--text);}
-  .muted{color:var(--muted);font-size:14px;}
-  .pill{display:inline-block;background:#EAF7FE;color:var(--cyan-dark);font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;margin-right:6px;margin-bottom:6px;}
-  .hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px;}
+  .muted{color:var(--muted);font-size:14.5px;}
+  code{font-family:"JetBrains Mono",Consolas,monospace;font-size:.9em;background:var(--cyan-tint);padding:1px 5px;border-radius:2px;}
+  .pill{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;font-weight:500;padding:5px 12px;border-radius:2px;}
+  .pill::before{content:"";display:inline-block;width:6px;height:6px;background:var(--cyan);margin-right:8px;vertical-align:middle;transform:skewY(-28deg);}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 20px;}
 
-  label.field-label{display:block;font-weight:600;font-size:14px;margin:0 0 6px;color:var(--navy);}
+  /* ---------- Formularios ---------- */
+  label.field-label{display:block;font-weight:600;font-size:14px;margin:0 0 6px;color:var(--ink);}
   input[type="text"], input[type="email"], select{
-    width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;font-size:15px;
-    background:#fff;color:var(--text);margin-bottom:18px;
+    width:100%;padding:12px 14px;border:1px solid #CFCFCF;border-radius:var(--radius);font-size:15px;
+    font-family:inherit;background:#fff;color:var(--text);margin-bottom:20px;
   }
-  input:focus, select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,174,239,.15);}
+  input:focus, select:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(0,225,255,.35);}
 
-  .check-row{display:flex;align-items:flex-start;gap:10px;background:#FBF8EF;border:1px solid #F0E4BE;border-radius:10px;padding:14px;margin:18px 0;}
-  .check-row input{margin-top:3px;width:18px;height:18px;flex:none;}
-  .check-row label{font-size:13.5px;color:#6b5a1f;}
+  .check-row{display:flex;align-items:flex-start;gap:12px;background:var(--cyan-tint);border-left:4px solid var(--cyan);padding:16px;margin:20px 0;}
+  .check-row input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--ink);}
+  .check-row label{font-size:14px;color:var(--ink);}
 
-  .q-block{border-top:1px solid var(--border);padding-top:18px;margin-top:18px;}
+  /* ---------- Preguntas ---------- */
+  .q-block{border-top:1px solid var(--border);padding-top:22px;margin-top:22px;}
   .q-block:first-child{border-top:none;padding-top:0;margin-top:0;}
-  .q-index{font-size:12px;font-weight:700;color:var(--cyan-dark);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
-  .q-text{font-size:15.5px;font-weight:600;margin-bottom:10px;color:var(--text);}
+  .q-index{font-size:12px;font-weight:600;color:var(--graphite);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+  .q-text{font-size:16.5px;font-weight:600;margin-bottom:12px;color:var(--ink);}
   pre.code{
-    background:#0B2E4F;color:#CFE9F7;padding:12px 14px;border-radius:10px;font-size:13px;
-    overflow-x:auto;margin:0 0 12px;font-family:"SF Mono",Consolas,Menlo,monospace;line-height:1.5;
+    background:var(--ink);color:#E8E8E8;padding:14px 16px;border-radius:var(--radius);font-size:13.5px;
+    overflow-x:auto;margin:0 0 14px;font-family:"JetBrains Mono",Consolas,Menlo,monospace;line-height:1.6;
+    border-left:4px solid var(--cyan);
   }
   .opts{display:flex;flex-direction:column;gap:8px;}
   .opt{
-    display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:10px;
-    padding:10px 12px;cursor:pointer;font-size:14.5px;transition:.15s;background:#fff;
+    display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:var(--radius);
+    padding:12px 14px;cursor:pointer;font-size:15px;transition:border-color .15s,background .15s,box-shadow .15s;background:#fff;
   }
-  .opt:hover{border-color:var(--cyan);}
-  .opt.selected{border-color:var(--cyan);background:#EAF7FE;}
-  .opt input{margin:0;}
+  .opt:hover{border-color:var(--ink);}
+  .opt.selected{border-color:var(--ink);background:var(--cyan-tint);box-shadow:inset 4px 0 0 var(--cyan);}
+  .opt input{margin:0;width:17px;height:17px;flex:none;accent-color:var(--ink);}
 
-  .story{background:#F0F6FA;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:14.5px;white-space:pre-wrap;word-break:break-word;}
-  .story.mono{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:13px;line-height:1.7;}
+  .story{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:18px;font-size:14.5px;white-space:pre-wrap;word-break:break-word;}
+  .story.mono{font-family:"JetBrains Mono",Consolas,Menlo,monospace;font-size:13px;line-height:1.75;}
 
-  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px;}
+  /* ---------- Botones ---------- */
+  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:28px;gap:12px;}
   button{
-    font-family:inherit;font-size:15px;font-weight:600;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;
-    transition:.15s;
+    font-family:inherit;font-size:15px;font-weight:600;padding:13px 26px;border-radius:var(--radius);border:none;cursor:pointer;
+    transition:background .15s,color .15s,border-color .15s;
   }
-  button.primary{background:var(--cyan);color:#fff;}
-  button.primary:hover{background:var(--cyan-dark);}
-  button.primary:disabled{background:#B9CBD6;cursor:not-allowed;}
-  button.ghost{background:transparent;color:var(--navy);border:1px solid var(--border);}
-  button.ghost:hover{border-color:var(--navy);}
-  .err{color:var(--danger);font-size:13px;margin-top:6px;display:none;}
+  button.primary{background:var(--cyan);color:var(--black);}
+  button.primary::after{content:" →";}
+  button.primary:hover{background:var(--black);color:var(--cyan);}
+  button.primary:disabled{background:#D7D7D7;color:#8A8A8A;cursor:not-allowed;}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);}
+  button.ghost:hover{background:var(--ink);color:#fff;}
+  button:focus-visible{outline:3px solid var(--cyan);outline-offset:2px;}
+  .err{color:var(--danger);font-size:13.5px;margin-top:8px;display:none;}
   .err.show{display:block;}
 
-  .confirm-box{text-align:center;padding:40px 20px;}
-  .confirm-box .icon{font-size:52px;margin-bottom:10px;}
+  .confirm-box{text-align:center;padding:48px 24px;}
+  .confirm-box .icon{font-size:52px;margin-bottom:12px;}
 
-  footer.foot{max-width:760px;margin:30px auto 0;padding:0 18px;color:var(--muted);font-size:12.5px;text-align:center;}
+  /* ---------- Footer ---------- */
+  footer.foot{background:var(--black);color:#A3A2A2;font-size:13px;margin-top:40px;}
+  footer.foot .inner{max-width:880px;margin:0 auto;padding:28px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  footer.foot img{height:34px;width:auto;}
+  footer.foot p{margin:0;color:#A3A2A2;flex:1;min-width:220px;}
+
+  @media (max-width:560px){
+    header.top .logo{height:32px;}
+    header.top .step strong{font-size:13px;}
+    .card{padding:24px 18px;margin-top:20px;}
+    .hero .inner{padding:26px 56px 30px 20px;}
+    .hero::before{width:56px;right:-28px;}
+    .hero::after{display:none;}
+    button{padding:12px 20px;}
+  }
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="inner">
-    <div class="brand">UTEC Posgrado
-      <small>Maestría en Ciencia de Datos e Inteligencia Artificial</small>
-    </div>
-    <div class="brand" style="text-align:right;">Evaluación Diagnóstica
-      <small id="stepLabelTop">de Programación</small>
-    </div>
+    <a href="https://posgrado.utec.edu.pe/maestrias/ciencia-de-datos-inteligencia-artificial" target="_blank" rel="noopener" aria-label="UTEC Posgrado">
+      <img class="logo" src="assets/logo-utec-posgrado-blanco.svg" alt="UTEC Posgrado">
+    </a>
+    <div class="step"><strong>Evaluación diagnóstica</strong><span id="progressLabel">Paso 1</span></div>
   </div>
   <div class="progress-outer"><div class="progress-inner" id="progressBar"></div></div>
-  <div class="progress-label" id="progressLabel">Paso 1</div>
 </header>
+
+<section class="hero">
+  <div class="inner">
+    <p class="eyebrow">Maestría en Ciencia de Datos e Inteligencia Artificial</p>
+    <h1>Evaluación diagnóstica de programación</h1>
+  </div>
+</section>
 
 <div class="wrap">
   <div id="app"></div>
 </div>
 
 <footer class="foot">
-  UTEC Posgrado — Este formulario es de uso interno para el proceso de admisión de la Maestría en Ciencia de Datos e Inteligencia Artificial.
+  <div class="inner">
+    <img src="assets/logo-utec-posgrado-blanco.svg" alt="UTEC Posgrado">
+    <p>Formulario de uso interno para el proceso de admisión de la Maestría en Ciencia de Datos e Inteligencia Artificial.</p>
+  </div>
 </footer>
 
 <script id="exam-data" type="application/json">{"preguntas": [{"tema": "Tipos y operadores", "q": "¿Cuál es el resultado de la división entera 17 // 5 y del residuo 17 % 5?", "code": null, "opts": ["3 y 2", "3.4 y 0", "2 y 3", "4 y 2"]}, {"tema": "Operadores lógicos", "q": "Dado a = 4 y b = 7, ¿cuál es el valor de la expresión (a < b) AND NOT (a == 4)?", "code": null, "opts": ["Verdadero", "Falso", "Error de sintaxis", "Depende del lenguaje"]}, {"tema": "Condicionales y bucles", "q": "¿Qué valor se imprime?", "code": "total = 0\npara i desde 1 hasta 6 hacer\n  si i es impar entonces\n    total = total + i\n  fin si\nfin para\nimprimir total", "opts": ["21", "12", "9", "6"]}, {"tema": "Bucles anidados", "q": "¿Qué valor se imprime?", "code": "contador = 0\npara i desde 1 hasta 3 hacer\n  para j desde 1 hasta i hacer\n    contador = contador + 1\n  fin para\nfin para\nimprimir contador", "opts": ["3", "9", "12", "6"]}, {"tema": "Bucle while", "q": "¿Cuántas veces se ejecuta el cuerpo del bucle? (// es división entera)", "code": "n = 10\nmientras n > 1 hacer\n  n = n // 2\nfin mientras", "opts": ["3", "2", "4", "5"]}, {"tema": "Condicionales", "q": "¿Qué se imprime?", "code": "x = 15\nsi x > 10 entonces\n  imprimir \"A\"\nfin si\nsi x > 5 entonces\n  imprimir \"B\"\nsino\n  imprimir \"C\"\nfin si", "opts": ["Solo A", "Solo B", "A y B", "A, B y C"]}, {"tema": "Funciones y paso por valor", "q": "Los números se pasan por valor. ¿Qué imprime este código?", "code": "función duplicar(n)\n  n = n * 2\n  retornar n\nfin función\n\nx = 5\ny = duplicar(x)\nimprimir x, y", "opts": ["10 y 10", "5 y 5", "10 y 5", "5 y 10"]}, {"tema": "Funciones y retorno", "q": "¿Qué valor se imprime?", "code": "función f(a, b)\n  retornar a - b\nfin función\n\nimprimir f(10, 4) + f(4, 10)", "opts": ["12", "0", "6", "-12"]}, {"tema": "Listas (slicing)", "q": "Dada lista = [10, 20, 30, 40, 50] (índices desde 0), ¿qué contiene lista[1:4], donde el índice final es excluyente?", "code": null, "opts": ["[10, 20, 30, 40]", "[20, 30, 40, 50]", "[20, 30]", "[20, 30, 40]"]}, {"tema": "Listas (operaciones)", "q": "¿Qué contiene la lista al final?", "code": "lista = [3, 8, 1]\nlista.agregar_al_final(5)\nlista.eliminar_posicion(0)\nimprimir lista", "opts": ["[3, 8, 1]", "[8, 1, 5]", "[8, 1]", "[3, 1, 5]"]}, {"tema": "Strings", "q": "Dado texto = \"datos\", ¿qué se obtiene al tomar solo los caracteres de las posiciones 0, 2 y 4 (base 0)?", "code": null, "opts": ["\"dts\"", "\"atos\"", "\"aos\"", "\"dato\""]}, {"tema": "Diccionarios", "q": "¿Qué se imprime?", "code": "d = {\"a\": 1, \"b\": 2}\nd[\"c\"] = 3\nd[\"a\"] = d[\"a\"] + 10\nimprimir d[\"a\"], tamaño(d)", "opts": ["1 y 2", "10 y 3", "11 y 2", "11 y 3"]}, {"tema": "Conjuntos (sets)", "q": "Se tiene una lista de 10,000 IDs de clientes con duplicados y se desea quedarse solo con los valores únicos. ¿Qué estructura es la más adecuada?", "code": null, "opts": ["Pila", "Cola", "Conjunto (set)", "Matriz"]}, {"tema": "Recursión", "q": "¿Qué valor se imprime?", "code": "función suma(n)\n  si n == 0 entonces\n    retornar 0\n  fin si\n  retornar n + suma(n - 1)\nfin función\n\nimprimir suma(4)", "opts": ["4", "24", "0", "10"]}, {"tema": "Recursión (caso base)", "q": "En una función recursiva, ¿para qué sirve el \"caso base\"?", "code": null, "opts": ["Para acelerar la ejecución", "Para detener la recursión cuando se llega al caso más simple", "Para declarar las variables", "Para evitar usar parámetros"]}, {"tema": "Complejidad", "q": "Recorrer una sola vez una lista de n elementos para sumar todos sus valores tiene una complejidad de:", "code": null, "opts": ["O(1)", "O(log n)", "O(n)", "O(n²)"]}, {"tema": "Eficiencia de búsqueda", "q": "Se busca un valor en una lista ORDENADA de 1,000,000 de números. ¿Qué estrategia es la más eficiente?", "code": null, "opts": ["Recorrerla elemento por elemento desde el inicio", "Búsqueda binaria: descartar la mitad de la lista en cada paso", "Copiarla a otra lista y recorrer la copia", "Todas tardan lo mismo"]}, {"tema": "Depuración (caso borde)", "q": "Este código calcula el promedio de una lista. ¿En qué caso falla?", "code": "suma = 0\npara cada x en lista hacer\n  suma = suma + x\nfin para\npromedio = suma / tamaño(lista)", "opts": ["Una lista con números negativos", "Una lista con decimales", "Una lista con un solo elemento", "Una lista vacía"]}, {"tema": "Depuración (bucle)", "q": "Se quiere imprimir los números del 1 al 5. ¿Qué ocurre con este código?", "code": "i = 1\nmientras i <= 5 hacer\n  imprimir i\nfin mientras", "opts": ["Imprime del 1 al 4", "Imprime del 1 al 5 y termina", "Bucle infinito: i nunca se incrementa", "Error de sintaxis"]}, {"tema": "Depuración (lógica)", "q": "Este código busca el mayor valor de una lista de enteros. ¿En qué caso da un resultado incorrecto?", "code": "mayor = 0\npara cada x en lista hacer\n  si x > mayor entonces\n    mayor = x\n  fin si\nfin para\nretornar mayor", "opts": ["Una lista con solo números negativos", "Una lista con números repetidos", "Una lista con ceros y positivos", "Nunca falla"]}], "reto1_texto": "ENTRENAR modelo gráfico Matriz Entrenar modelo Variable datos modelo Datos lista python variable python datos función variable datos Matriz ERROR Entrenar entrenar entrenar Modelo variable función función python DATOS variable prueba error FUNCIÓN Clase ENTRENAR matriz Datos Variable datos Prueba datos MODELO python entrenar lista matriz python gráfico error datos modelo variable datos FUNCIÓN Datos Error variable modelo función datos Datos Modelo Datos entrenar clase datos Modelo datos PYTHON PYTHON PRUEBA error Python entrenar Python modelo Matriz Lista datos modelo variable entrenar clase modelo Datos modelo PYTHON lista LISTA datos función error modelo MODELO MODELO función python gráfico clase modelo lista python gráfico python lista datos datos ENTRENAR Datos", "reto1_preguntas": [{"id": "r1a", "label": "¿Cuál es la palabra más frecuente?", "opts": ["python", "datos", "modelo", "error", "lista"]}, {"id": "r1b", "label": "¿Cuántas veces aparece esa palabra?", "opts": ["14", "22", "109", "23", "17", "24"]}, {"id": "r1c", "label": "¿Cuántas palabras DISTINTAS tiene el texto (ignorando mayúsculas)?", "opts": ["13", "12", "30", "11", "109", "14"]}], "reto2_cadenas": ["(()(()()()((()(()())((()()()((((()(((()(()))))))))))))))", ")(()((((())))))((()()(()))(()))((()())(()((())(()(())((())))())())", "(()()())()()()()()()()()(()((()()((((((()())(()))))))))", "(()())(()(()((()((()((()(())))())((()))((()(())(()))))()(())))))", "(()(())(()()())())(((()((((((((()((())))((()())((()))()(())))))))))))))", ")((())((()))((((()(((()(((()()()()((()((()(()()()()))))))(())())))))))))", "()((()()(())((((()(())(()(()()))())())((())((((((()(((((()))))))))))))))))", "((()())()()()(()))()()(())()()()()(()(()()()(())))()((())))(()()(()())"], "reto2_pregunta": {"id": "r2a", "label": "¿Cuántas de las 8 cadenas están balanceadas?", "opts": ["3", "4", "2", "5", "8", "6"]}}</script>
@@ -198,7 +243,7 @@ function renderPortada() {
   app.innerHTML = '';
   const card = el(`
     <div class="card">
-      <h1>Evaluación Diagnóstica de Programación</h1>
+      <h2>Antes de empezar</h2>
       <p>Este diagnóstico ayuda a la coordinación de la Maestría en Ciencia de Datos e Inteligencia Artificial a conocer tu nivel actual de programación. No requiere instalar nada.</p>
       <div class="hero-meta">
         <span class="pill">~45 minutos</span>
