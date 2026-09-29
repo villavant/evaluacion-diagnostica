@@ -192,6 +192,7 @@ const DATA = JSON.parse(document.getElementById('exam-data').textContent);
 
 const state = {
   nombre: "",
+  email: "",
   lenguaje: "",
   experiencia: "",
   integridad: false,
@@ -287,7 +288,9 @@ function renderDatos() {
     <div class="card">
       <h2>Datos del postulante</h2>
       <label class="field-label">Nombres y apellidos completos</label>
-      <input type="text" id="inpNombre" placeholder="Tu nombre completo">
+      <input type="text" id="inpNombre" placeholder="Tu nombre completo" autocomplete="name">
+      <label class="field-label">Correo electrónico</label>
+      <input type="email" id="inpEmail" placeholder="tucorreo@ejemplo.com" autocomplete="email">
       <label class="field-label">Lenguaje de programación con el que resolverás los ejercicios cortos</label>
       <select id="selLenguaje">
         <option value="">Selecciona una opción</option>
@@ -300,7 +303,8 @@ function renderDatos() {
         <option>Menos de 1 año</option><option>De 1 a 3 años</option>
         <option>De 3 a 5 años</option><option>Más de 5 años</option>
       </select>
-      <div class="err" id="errDatos">Completa los tres campos para continuar.</div>
+      <div class="err" id="errDatos">Completa todos los campos para continuar.</div>
+      <div class="err" id="errEmail">Ingresa un correo electrónico válido.</div>
       <div class="nav-row">
         <button class="ghost" id="btnBack">Atrás</button>
         <button class="primary" id="btnNext">Continuar</button>
@@ -309,6 +313,7 @@ function renderDatos() {
   `);
   app.appendChild(card);
   card.querySelector('#inpNombre').value = state.nombre;
+  card.querySelector('#inpEmail').value = state.email;
   card.querySelector('#selLenguaje').value = state.lenguaje;
   card.querySelector('#selExperiencia').value = state.experiencia;
 
@@ -317,8 +322,12 @@ function renderDatos() {
     const nombre = card.querySelector('#inpNombre').value.trim();
     const lenguaje = card.querySelector('#selLenguaje').value;
     const experiencia = card.querySelector('#selExperiencia').value;
-    if (!nombre || !lenguaje || !experiencia) { card.querySelector('#errDatos').classList.add('show'); return; }
-    state.nombre = nombre; state.lenguaje = lenguaje; state.experiencia = experiencia;
+    const email = card.querySelector('#inpEmail').value.trim().toLowerCase();
+    card.querySelector('#errDatos').classList.remove('show');
+    card.querySelector('#errEmail').classList.remove('show');
+    if (!nombre || !email || !lenguaje || !experiencia) { card.querySelector('#errDatos').classList.add('show'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { card.querySelector('#errEmail').classList.add('show'); return; }
+    state.nombre = nombre; state.email = email; state.lenguaje = lenguaje; state.experiencia = experiencia;
     state.step = 2; render();
   });
 }
@@ -484,6 +493,7 @@ function renderEnvio() {
 async function enviar() {
   const payload = {
     nombre: state.nombre,
+    email: state.email,
     lenguaje: state.lenguaje,
     experiencia: state.experiencia,
     respuestasParteI: state.respuestasI,

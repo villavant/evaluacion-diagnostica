@@ -5,17 +5,21 @@ Proyecto: `utec-evaluacion-diagnostica` (`blgcpoqhrjuvllmgwhhx`, región sa-east
 - `public.enviar_evaluacion(p jsonb)` — la llama el formulario (`index.html`). Califica en el
   servidor, guarda en `public.resultados` y devuelve el puntaje por sección.
 - `public.resultados` — solo la pueden leer/borrar los correos de `public.admins` (RLS).
-- `public.admins` — correos autorizados para `admin.html`.
+- `public.admins` — correos autorizados para `admin.html` (login con correo y contraseña).
 - `privado.clave` — clave de respuestas. El esquema `privado` no se expone por la API.
   **No está en este repositorio.**
 
 ## Agregar un admin
 
-En el SQL Editor de Supabase:
+1. Supabase → Authentication → Users → **Add user → Create new user**: correo +
+   contraseña, con **Auto Confirm User** marcado.
+2. En el SQL Editor, autorízalo para ver resultados:
 
 ```sql
 insert into public.admins (email) values ('nombre@utec.edu.pe');
 ```
+
+Para quitar el acceso: `delete from public.admins where email = '...';`
 
 ## Cambiar la clave de respuestas
 

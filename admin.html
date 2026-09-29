@@ -38,7 +38,7 @@
   p{margin:0 0 14px;}
   .muted{color:var(--muted);font-size:14px;}
   label{display:block;font-weight:600;font-size:14px;margin:0 0 6px;}
-  input[type=email],input[type=search]{width:100%;padding:11px 14px;border:1px solid #CFCFCF;border-radius:var(--radius);font:inherit;font-size:15px;background:#fff;color:var(--text);}
+  input[type=email],input[type=password],input[type=search]{width:100%;padding:11px 14px;border:1px solid #CFCFCF;border-radius:var(--radius);font:inherit;font-size:15px;background:#fff;color:var(--text);}
   input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(0,225,255,.35);}
   button{font:inherit;font-size:14.5px;font-weight:600;padding:11px 20px;border-radius:var(--radius);border:none;cursor:pointer;transition:background .15s,color .15s;}
   button.primary{background:var(--cyan);color:var(--black);}
@@ -103,11 +103,13 @@
   <!-- Login -->
   <div class="card login" id="vLogin" hidden>
     <h2>Acceso de coordinación</h2>
-    <p class="muted">Ingresa tu correo y te enviaremos un link para entrar. Solo los correos autorizados pueden ver los resultados.</p>
+    <p class="muted">Solo las cuentas autorizadas pueden ver los resultados.</p>
     <form id="fLogin">
       <label for="email">Correo</label>
-      <input type="email" id="email" required autocomplete="email" placeholder="nombre@utec.edu.pe">
-      <div style="margin-top:16px;"><button class="primary" id="btnLogin" type="submit">Enviarme el link</button></div>
+      <input type="email" id="email" required autocomplete="username" placeholder="nombre@utec.edu.pe">
+      <label for="password" style="margin-top:14px;">Contraseña</label>
+      <input type="password" id="password" required autocomplete="current-password">
+      <div style="margin-top:18px;"><button class="primary" id="btnLogin" type="submit">Ingresar</button></div>
     </form>
     <div class="msg" id="loginMsg" hidden></div>
   </div>
@@ -127,7 +129,7 @@
       <div class="stat"><div class="k">≥ 60 puntos</div><div class="v" id="sPass">–</div></div>
     </div>
     <div class="toolbar">
-      <input type="search" id="q" placeholder="Buscar por nombre o lenguaje…" aria-label="Buscar">
+      <input type="search" id="q" placeholder="Buscar por nombre, correo o lenguaje…" aria-label="Buscar">
       <button class="ghost" id="btnReload">Actualizar</button>
       <button class="primary" id="btnCsv">Descargar Excel (CSV)</button>
     </div>
@@ -152,6 +154,7 @@ const $ = (id) => document.getElementById(id);
 const COLS = [
   { key: 'creado_en', label: 'Fecha', fmt: (v) => new Date(v).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) },
   { key: 'nombre', label: 'Nombre', cls: 'nombre' },
+  { key: 'email', label: 'Correo' },
   { key: 'lenguaje', label: 'Lenguaje' },
   { key: 'experiencia', label: 'Experiencia' },
   { key: 'puntaje_parte1', label: 'Parte I /80', cls: 'num' },
@@ -189,7 +192,7 @@ async function cargar() {
 
 function filtradas() {
   const q = $('q').value.trim().toLowerCase();
-  const f = q ? rows.filter((r) => (r.nombre + ' ' + r.lenguaje).toLowerCase().includes(q)) : rows.slice();
+  const f = q ? rows.filter((r) => (r.nombre + ' ' + (r.email || '') + ' ' + r.lenguaje).toLowerCase().includes(q)) : rows.slice();
   return f.sort((a, b) => (a[sort.key] > b[sort.key] ? 1 : a[sort.key] < b[sort.key] ? -1 : 0) * sort.dir);
 }
 
@@ -215,7 +218,7 @@ $('thead').addEventListener('click', (e) => {
   const th = e.target.closest('th[data-key]');
   if (!th) return;
   const key = th.dataset.key;
-  sort = { key, dir: sort.key === key ? -sort.dir : (key === 'nombre' || key === 'lenguaje' || key === 'experiencia' ? 1 : -1) };
+  sort = { key, dir: sort.key === key ? -sort.dir : (key === 'nombre' || key === 'email' || key === 'lenguaje' || key === 'experiencia' ? 1 : -1) };
   render();
 });
 
@@ -256,19 +259,19 @@ $('btnCsv').addEventListener('click', () => {
 
 $('fLogin').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = $('email').value.trim().toLowerCase();
   $('btnLogin').disabled = true;
-  const { error } = await sb.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: location.origin + location.pathname },
+  $('loginMsg').hidden = true;
+  const { error } = await sb.auth.signInWithPassword({
+    email: $('email').value.trim().toLowerCase(),
+    password: $('password').value,
   });
   $('btnLogin').disabled = false;
-  const m = $('loginMsg');
-  m.hidden = false;
-  m.className = 'msg' + (error ? ' err' : '');
-  m.textContent = error
-    ? 'No se pudo enviar el link: ' + error.message
-    : `Listo. Revisa tu bandeja (${email}) y abre el link desde este mismo navegador.`;
+  if (error) {
+    const m = $('loginMsg');
+    m.hidden = false;
+    m.className = 'msg err';
+    m.textContent = error.message === 'Invalid login credentials' ? 'Correo o contraseña incorrectos.' : 'No se pudo ingresar: ' + error.message;
+  }
 });
 
 $('btnLogout').addEventListener('click', () => sb.auth.signOut());
