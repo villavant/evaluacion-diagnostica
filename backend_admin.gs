@@ -98,8 +98,24 @@ function calcularPuntaje(body) {
   };
 }
 
+/**
+ * Si el script está vinculado a una hoja (Extensiones → Apps Script), usa esa.
+ * Si es un script independiente, crea una hoja la primera vez, guarda su ID en
+ * las propiedades del script y la reutiliza en los envíos siguientes.
+ */
+function getSpreadsheet() {
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) return active;
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('SHEET_ID');
+  if (id) return SpreadsheetApp.openById(id);
+  const ss = SpreadsheetApp.create('Resultados — Evaluación Diagnóstica');
+  props.setProperty('SHEET_ID', ss.getId());
+  return ss;
+}
+
 function getOrCreateSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
@@ -127,5 +143,5 @@ function pruebaManual() {
     respuestaReto2: KEY.reto2_ok,
   };
   doPost({ postData: { contents: JSON.stringify(bodyDeEjemplo) } });
-  Logger.log('Fila de prueba agregada (debería mostrar 100/100).');
+  Logger.log('Fila de prueba agregada (debería mostrar 100/100) en: ' + getSpreadsheet().getUrl());
 }
