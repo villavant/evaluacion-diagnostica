@@ -66,7 +66,37 @@
   th:hover{color:var(--cyan);}
   th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;}
   th .arrow{color:var(--cyan);margin-left:4px;}
+  tbody tr{cursor:pointer;}
   tbody tr:hover{background:var(--cyan-tint);}
+  .ver{background:none;border:none;color:var(--ink);padding:4px 8px;font-size:13px;text-decoration:underline;text-underline-offset:3px;}
+  .ver:hover{background:none;color:var(--cyan-deep,#00A9C2);}
+
+  dialog#detalle{border:none;padding:0;border-radius:var(--radius);width:min(820px,calc(100vw - 32px));max-height:calc(100vh - 48px);box-shadow:0 20px 60px rgba(0,0,0,.35);}
+  dialog#detalle::backdrop{background:rgba(5,5,5,.55);}
+  .d-head{background:var(--ink);color:#fff;padding:22px 26px;border-bottom:3px solid var(--cyan);position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;gap:16px;align-items:flex-start;}
+  .d-head h2{margin:0;font-size:22px;}
+  .d-head .sub{color:#A3A2A2;font-size:13.5px;margin-top:2px;}
+  .d-head .close{background:transparent;color:#fff;border:1px solid #4E4B4C;padding:6px 12px;font-size:13px;}
+  .d-head .close:hover{background:#fff;color:var(--black);}
+  .d-body{padding:22px 26px 28px;}
+  .d-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px;}
+  .d-sum > div{border:1px solid var(--border);padding:10px 12px;}
+  .d-sum .k{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .d-sum .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .d-body h3{font-size:15px;margin:22px 0 10px;display:flex;justify-content:space-between;}
+  .d-body h3 span{color:var(--muted);font-weight:500;}
+  .q{display:grid;grid-template-columns:28px 1fr auto;gap:10px;padding:10px 0;border-top:1px solid var(--border);font-size:14px;}
+  .q .mark{font-weight:700;font-size:16px;line-height:1.3;}
+  .q.ok .mark{color:#15803D;}
+  .q.bad .mark{color:var(--danger);}
+  .q .tema{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .q .txt{font-weight:500;}
+  .q .ans{margin-top:4px;font-size:13.5px;}
+  .q .ans b{font-weight:600;}
+  .q.bad .ans .dio{color:var(--danger);text-decoration:line-through;}
+  .q .pts{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .q.bad .pts{color:var(--muted);font-weight:500;}
+  @media (max-width:720px){.d-sum{grid-template-columns:repeat(2,1fr);}}
   td.total{font-weight:700;}
   td.over{color:#B45309;font-weight:700;}
   td.over::after{content:" ⚠";}
@@ -144,6 +174,8 @@
     </div>
     <div class="msg err" id="dataMsg" hidden></div>
   </div>
+
+  <dialog id="detalle"><div id="detalleBody"></div></dialog>
 </div>
 
 <script type="module">
@@ -203,6 +235,72 @@ async function cargar() {
   render();
 }
 
+// Clave (solo admins) y textos de las preguntas (desde el formulario publicado).
+let examen = null;
+async function cargarExamen() {
+  if (examen) return examen;
+  const [{ data: clave, error }, html] = await Promise.all([
+    sb.rpc('clave_para_admin'),
+    fetch('index.html', { cache: 'no-cache' }).then((r) => r.text()),
+  ]);
+  if (error) throw error;
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const preguntas = JSON.parse(doc.getElementById('exam-data').textContent);
+  examen = { clave, preguntas };
+  return examen;
+}
+
+async function verDetalle(r) {
+  const body = $('detalleBody');
+  body.innerHTML = '<div class="d-body">Cargando…</div>';
+  $('detalle').showModal();
+  let ex;
+  try { ex = await cargarExamen(); }
+  catch (err) { body.innerHTML = `<div class="d-body msg err">No se pudo cargar el detalle: ${esc(err.message)}</div>`; return; }
+  const { clave, preguntas: P } = ex;
+  const opt = (opts, i) => (i === null || i === undefined ? 'Sin respuesta' : `${String.fromCharCode(65 + i)}) ${opts[i] ?? '?'}`);
+  const item = (n, tema, texto, opts, dio, ok, pts) => {
+    const bien = dio === ok;
+    return `<div class="q ${bien ? 'ok' : 'bad'}">
+      <div class="mark">${bien ? '✓' : '✗'}</div>
+      <div>
+        <div class="tema">${n}${tema ? ' · ' + esc(tema) : ''}</div>
+        <div class="txt">${esc(texto)}</div>
+        <div class="ans">${bien
+          ? `Marcó <b>${esc(opt(opts, dio))}</b>`
+          : `Marcó <b class="dio">${esc(opt(opts, dio))}</b> · Correcta: <b>${esc(opt(opts, ok))}</b>`}</div>
+      </div>
+      <div class="pts">${bien ? '+' + pts : '0'} / ${pts}</div>
+    </div>`;
+  };
+  const r1 = r.respuestas_parte1 || [];
+  const rr = r.respuestas_reto1 || {};
+  const parte1 = P.preguntas.map((p, i) => item(`Pregunta ${i + 1}`, p.tema, p.q, p.opts, r1[i], clave.parte1[i], 4));
+  const reto = P.reto1_preguntas.map((p, i) => item(`Reto ${i + 1}`, '', p.label, p.opts, rr[p.id], clave.reto1[p.id], clave.reto1_pts[p.id]));
+  const ok1 = P.preguntas.filter((_, i) => r1[i] === clave.parte1[i]).length;
+  const okR = P.reto1_preguntas.filter((p) => rr[p.id] === clave.reto1[p.id]).length;
+
+  body.innerHTML = `
+    <div class="d-head">
+      <div><h2>${esc(r.nombre)}</h2><div class="sub">${esc(r.email || 'sin correo')} · ${esc(r.lenguaje)} · ${esc(r.experiencia)}</div></div>
+      <button class="close" id="btnCerrar">Cerrar</button>
+    </div>
+    <div class="d-body">
+      <div class="d-sum">
+        <div><div class="k">Total</div><div class="v">${r.puntaje_total}/100</div></div>
+        <div><div class="k">Parte I</div><div class="v">${r.puntaje_parte1}/80</div></div>
+        <div><div class="k">Parte II</div><div class="v">${r.puntaje_reto1}/20</div></div>
+        <div><div class="k">Duración</div><div class="v">${duracion(r.duracion_seg)}</div></div>
+      </div>
+      <h3>Parte I — Selección múltiple <span>${ok1} de ${P.preguntas.length} correctas</span></h3>
+      ${parte1.join('')}
+      <h3>Parte II — Reto: palabra más frecuente <span>${okR} de ${P.reto1_preguntas.length} correctas</span></h3>
+      ${reto.join('')}
+    </div>`;
+  $('btnCerrar').addEventListener('click', () => $('detalle').close());
+}
+$('detalle').addEventListener('click', (e) => { if (e.target === $('detalle')) $('detalle').close(); });
+
 function filtradas() {
   const q = $('q').value.trim().toLowerCase();
   const f = q ? rows.filter((r) => (r.nombre + ' ' + (r.email || '') + ' ' + r.lenguaje).toLowerCase().includes(q)) : rows.slice();
@@ -224,7 +322,7 @@ function render() {
 
   $('tbody').innerHTML = f.length
     ? f.map((r) => `<tr>${COLS.map((c) => `<td class="${c.cls || ''} ${c.tdCls ? c.tdCls(r) : ''}">${esc(c.fmt ? c.fmt(r[c.key]) : r[c.key])}</td>`).join('')}
-        <td><button class="del" data-id="${r.id}" title="Eliminar este registro">Eliminar</button></td></tr>`).join('')
+        <td><button class="ver" data-id="${r.id}">Ver detalle</button><button class="del" data-id="${r.id}" title="Eliminar este registro">Eliminar</button></td></tr>`).join('')
     : `<tr><td class="empty" colspan="${COLS.length + 1}">${rows.length ? 'Ningún resultado coincide con la búsqueda.' : 'Aún no hay envíos.'}</td></tr>`;
 }
 
@@ -238,7 +336,12 @@ $('thead').addEventListener('click', (e) => {
 
 $('tbody').addEventListener('click', async (e) => {
   const btn = e.target.closest('.del');
-  if (!btn) return;
+  if (!btn) {
+    const tr = e.target.closest('tr');
+    const id = tr?.querySelector('.ver')?.dataset.id;
+    if (id) verDetalle(rows.find((x) => String(x.id) === id));
+    return;
+  }
   const r = rows.find((x) => String(x.id) === btn.dataset.id);
   if (!confirm(`¿Eliminar el registro de "${r.nombre}" (${r.puntaje_total}/100)? Esta acción no se puede deshacer.`)) return;
   const { error } = await sb.from('resultados').delete().eq('id', r.id);

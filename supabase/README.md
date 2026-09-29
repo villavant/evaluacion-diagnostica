@@ -6,6 +6,7 @@ Proyecto: `utec-evaluacion-diagnostica` (`blgcpoqhrjuvllmgwhhx`, región sa-east
   servidor, guarda en `public.resultados` y devuelve el puntaje por sección.
 - `public.resultados` — solo la pueden leer/borrar los correos de `public.admins` (RLS).
 - `public.admins` — correos autorizados para `admin.html` (login con correo y contraseña).
+- `public.clave_para_admin()` — devuelve la clave solo a admins (detalle por pregunta en el panel).
 - `privado.clave` — clave de respuestas. El esquema `privado` no se expone por la API.
   **No está en este repositorio.**
 
