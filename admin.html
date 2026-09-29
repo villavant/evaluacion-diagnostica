@@ -22,16 +22,16 @@
   [hidden]{display:none !important;}
 
   header.top{background:var(--black);color:#fff;}
-  header.top .inner{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  header.top .inner{max-width:1440px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
   header.top .logo{height:40px;width:auto;display:block;}
   header.top .who{font-size:13px;color:#A3A2A2;text-align:right;display:flex;align-items:center;gap:14px;}
   header.top .who strong{color:#fff;font-weight:600;display:block;font-size:14px;}
   .hero{background:var(--ink);color:#fff;border-bottom:3px solid var(--cyan);}
-  .hero .inner{max-width:1180px;margin:0 auto;padding:26px 20px;}
+  .hero .inner{max-width:1440px;margin:0 auto;padding:26px 20px;}
   .hero .eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin:0 0 6px;}
   .hero h1{font-size:clamp(24px,4vw,32px);line-height:1.15;margin:0;}
 
-  .wrap{max-width:1180px;margin:0 auto;padding:24px 20px 60px;}
+  .wrap{max-width:1440px;margin:0 auto;padding:24px 20px 60px;}
   .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;}
   .login{max-width:440px;margin:30px auto;border-top:4px solid var(--cyan);}
   .login h2{margin:0 0 8px;font-size:22px;}
@@ -52,7 +52,7 @@
   .msg{margin-top:14px;font-size:14px;padding:12px 14px;border-left:4px solid var(--cyan);background:var(--cyan-tint);}
   .msg.err{border-color:var(--danger);background:#FDECEC;}
 
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
   .stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
   .stat .k{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
   .stat .v{font-size:30px;font-weight:700;line-height:1.2;margin-top:4px;font-variant-numeric:tabular-nums;}
@@ -68,6 +68,8 @@
   th .arrow{color:var(--cyan);margin-left:4px;}
   tbody tr:hover{background:var(--cyan-tint);}
   td.total{font-weight:700;}
+  td.over{color:#B45309;font-weight:700;}
+  td.over::after{content:" ⚠";}
   td.nombre{white-space:normal;min-width:180px;font-weight:500;}
   .del{background:none;border:none;color:var(--muted);padding:4px 8px;font-size:13px;}
   .del:hover{color:var(--danger);background:none;}
@@ -127,6 +129,7 @@
       <div class="stat"><div class="k">Promedio</div><div class="v" id="sAvg">–</div></div>
       <div class="stat"><div class="k">Máximo</div><div class="v" id="sMax">–</div></div>
       <div class="stat"><div class="k">≥ 60 puntos</div><div class="v" id="sPass">–</div></div>
+      <div class="stat"><div class="k">Más de 45 min</div><div class="v" id="sOver">–</div></div>
     </div>
     <div class="toolbar">
       <input type="search" id="q" placeholder="Buscar por nombre, correo o lenguaje…" aria-label="Buscar">
@@ -152,7 +155,9 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const $ = (id) => document.getElementById(id);
 const COLS = [
-  { key: 'creado_en', label: 'Fecha', fmt: (v) => new Date(v).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) },
+  { key: 'inicio', label: 'Inicio', fmt: fechaHora },
+  { key: 'fin', label: 'Fin', fmt: fechaHora },
+  { key: 'duracion_seg', label: 'Duración', cls: 'num', fmt: duracion, tdCls: (r) => (r.duracion_seg > LIMITE_SEG ? 'over' : '') },
   { key: 'nombre', label: 'Nombre', cls: 'nombre' },
   { key: 'email', label: 'Correo' },
   { key: 'lenguaje', label: 'Lenguaje' },
@@ -162,7 +167,16 @@ const COLS = [
   { key: 'puntaje_total', label: 'Total /100', cls: 'num total' },
 ];
 let rows = [];
-let sort = { key: 'creado_en', dir: -1 };
+const LIMITE_SEG = 45 * 60;
+function fechaHora(v) {
+  return v ? new Date(v).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : '—';
+}
+function duracion(seg) {
+  if (seg == null) return '—';
+  const h = Math.floor(seg / 3600), m = Math.floor((seg % 3600) / 60), s = seg % 60;
+  return (h ? `${h}:${String(m).padStart(2, '0')}` : `${m}`) + `:${String(s).padStart(2, '0')}`;
+}
+let sort = { key: 'fin', dir: -1 };
 
 function show(view) {
   for (const v of ['vLogin', 'vNoAdmin', 'vData']) $(v).hidden = v !== view;
@@ -202,13 +216,14 @@ function render() {
   $('sAvg').textContent = f.length ? (totals.reduce((a, b) => a + b, 0) / f.length).toFixed(1) : '–';
   $('sMax').textContent = f.length ? Math.max(...totals) : '–';
   $('sPass').textContent = f.length ? totals.filter((t) => t >= 60).length : '–';
+  $('sOver').textContent = f.length ? f.filter((r) => r.duracion_seg > LIMITE_SEG).length : '–';
 
   $('thead').innerHTML = COLS.map((c) =>
     `<th class="${c.cls?.includes('num') ? 'num' : ''}" data-key="${c.key}">${c.label}${sort.key === c.key ? `<span class="arrow">${sort.dir > 0 ? '↑' : '↓'}</span>` : ''}</th>`
   ).join('') + '<th></th>';
 
   $('tbody').innerHTML = f.length
-    ? f.map((r) => `<tr>${COLS.map((c) => `<td class="${c.cls || ''}">${esc(c.fmt ? c.fmt(r[c.key]) : r[c.key])}</td>`).join('')}
+    ? f.map((r) => `<tr>${COLS.map((c) => `<td class="${c.cls || ''} ${c.tdCls ? c.tdCls(r) : ''}">${esc(c.fmt ? c.fmt(r[c.key]) : r[c.key])}</td>`).join('')}
         <td><button class="del" data-id="${r.id}" title="Eliminar este registro">Eliminar</button></td></tr>`).join('')
     : `<tr><td class="empty" colspan="${COLS.length + 1}">${rows.length ? 'Ningún resultado coincide con la búsqueda.' : 'Aún no hay envíos.'}</td></tr>`;
 }
@@ -246,7 +261,7 @@ $('btnCsv').addEventListener('click', () => {
     return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   const lines = [cols.map((c) => cell(c.label)).join(',')]
-    .concat(filtradas().map((r) => cols.map((c) => cell(c.key === 'creado_en' ? c.fmt(r[c.key]) : r[c.key])).join(',')));
+    .concat(filtradas().map((r) => cols.map((c) => cell(c.fmt ? c.fmt(r[c.key]) : r[c.key])).join(',')));
   const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
