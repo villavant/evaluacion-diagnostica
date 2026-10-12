@@ -29,3 +29,17 @@ Puntaje: Parte I = 20 preguntas × 4 = 80; Parte II (reto) = 7 + 7 + 6 = 20. Tot
 ```sql
 update privado.clave set datos = '{"parte1":[...20 índices...],"reto1":{"r1a":0,"r1b":0,"r1c":0},"reto1_pts":{"r1a":7,"r1b":7,"r1c":6}}' where id = 1;
 ```
+
+## Correo con el resultado
+
+Cada fila nueva de `public.resultados` dispara (trigger `resultados_despachar_correo`, vía
+`pg_net`) la Edge Function `enviar-diagnostico`, que envía el resultado al postulante desde
+`admisionposgrado@utec.edu.pe` con copia a la coordinación. Remitente, copias y texto están
+al inicio de `functions/enviar-diagnostico/index.ts`.
+
+- Secretos de la función (Supabase → Edge Functions → Secrets): `SMTP_USER` (el buzón) y
+  `SMTP_PASS` (contraseña de aplicación de Google de ese buzón). Opcionales: `SMTP_HOST`,
+  `SMTP_PORT`. **No están en este repositorio.**
+- Estado por fila: `correo_estado` (`pendiente`, `enviando`, `enviado`, `error`; `null` = nunca
+  se intentó), `correo_enviado_en` y `correo_error`.
+- `public.reenviar_correo(p_id)` — solo admins; es el botón **Reenviar** de `admin.html`.

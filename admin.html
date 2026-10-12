@@ -61,7 +61,7 @@
 
   .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);}
   table{width:100%;border-collapse:collapse;font-size:14px;}
-  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;vertical-align:middle;}
   th{background:var(--ink);color:#fff;font-weight:600;font-size:12.5px;letter-spacing:.03em;cursor:pointer;user-select:none;position:sticky;top:0;}
   th:hover{color:var(--cyan);}
   th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;}
@@ -100,7 +100,17 @@
   td.total{font-weight:700;}
   td.over{color:#B45309;font-weight:700;}
   td.over::after{content:" ⚠";}
-  td.nombre{white-space:normal;min-width:180px;font-weight:500;}
+  td.dos{white-space:normal;overflow-wrap:anywhere;min-width:150px;}
+  td.dos .p1{font-weight:500;}
+  td.dos .p2{color:var(--muted);font-size:13px;}
+  td.acc{text-align:right;}
+  .badge{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:2px;background:var(--border);color:var(--graphite);}
+  .badge.ok{background:#DCFCE7;color:#15803D;}
+  .badge.bad{background:#FDECEC;color:var(--danger);cursor:help;}
+  .badge.wait{background:var(--cyan-tint);color:var(--ink);}
+  .reenviar{background:none;border:none;color:var(--ink);padding:4px 6px;font-size:13px;text-decoration:underline;text-underline-offset:3px;}
+  .reenviar:hover{background:none;color:#00A9C2;}
+  .reenviar:disabled{color:var(--muted);text-decoration:none;cursor:default;}
   .del{background:none;border:none;color:var(--muted);padding:4px 8px;font-size:13px;}
   .del:hover{color:var(--danger);background:none;}
   .empty{padding:40px;text-align:center;color:var(--muted);}
@@ -186,18 +196,47 @@ const SUPABASE_KEY = "sb_publishable_EXXR3IpFmc7ksMDjmOhitA_TYRrsUZg";
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const $ = (id) => document.getElementById(id);
+// Columnas de la tabla (compactas: dos datos por celda donde se puede).
 const COLS = [
-  { key: 'inicio', label: 'Inicio', fmt: fechaHora },
-  { key: 'fin', label: 'Fin', fmt: fechaHora },
+  { key: 'fin', label: 'Fecha', fmt: fechaHora },
   { key: 'duracion_seg', label: 'Duración', cls: 'num', fmt: duracion, tdCls: (r) => (r.duracion_seg > LIMITE_SEG ? 'over' : '') },
-  { key: 'nombre', label: 'Nombre', cls: 'nombre' },
-  { key: 'email', label: 'Correo' },
-  { key: 'lenguaje', label: 'Lenguaje' },
-  { key: 'experiencia', label: 'Experiencia' },
+  { key: 'nombre', label: 'Postulante', cls: 'dos', html: (r) => `<div class="p1">${esc(r.nombre)}</div><div class="p2">${esc(r.email || 'sin correo')}</div>` },
+  { key: 'lenguaje', label: 'Lenguaje / experiencia', cls: 'dos', html: (r) => `<div>${esc(r.lenguaje)}</div><div class="p2">${esc(r.experiencia)}</div>` },
   { key: 'puntaje_parte1', label: 'Parte I /80', cls: 'num' },
   { key: 'puntaje_reto1', label: 'Parte II /20', cls: 'num' },
   { key: 'puntaje_total', label: 'Total /100', cls: 'num total' },
+  { key: 'correo_estado', label: 'Correo', html: celdaCorreo },
 ];
+// Columnas del CSV (todos los datos, uno por columna).
+const CSV_COLS = [
+  { key: 'inicio', label: 'Inicio', fmt: fechaHora },
+  { key: 'fin', label: 'Fin', fmt: fechaHora },
+  { key: 'duracion_seg', label: 'Duración', fmt: duracion },
+  { key: 'nombre', label: 'Nombre' },
+  { key: 'email', label: 'Correo' },
+  { key: 'lenguaje', label: 'Lenguaje' },
+  { key: 'experiencia', label: 'Experiencia' },
+  { key: 'puntaje_parte1', label: 'Parte I /80' },
+  { key: 'puntaje_reto1', label: 'Parte II /20' },
+  { key: 'puntaje_total', label: 'Total /100' },
+  { key: 'correo_estado', label: 'Estado del correo', fmt: (v) => ESTADO_CORREO[v]?.txt ?? 'No enviado' },
+  { key: 'correo_enviado_en', label: 'Correo enviado', fmt: (v) => (v ? fechaHora(v) : '') },
+  { key: 'respuestas_parte1', label: 'Respuestas Parte I' },
+  { key: 'respuestas_reto1', label: 'Respuestas Parte II' },
+];
+const ESTADO_CORREO = {
+  enviado: { txt: 'Enviado', cls: 'ok' },
+  error: { txt: 'Error', cls: 'bad' },
+  pendiente: { txt: 'Enviando…', cls: 'wait' },
+  enviando: { txt: 'Enviando…', cls: 'wait' },
+};
+function celdaCorreo(r) {
+  const e = ESTADO_CORREO[r.correo_estado] ?? { txt: 'No enviado', cls: '' };
+  const title = r.correo_estado === 'error' ? r.correo_error
+    : r.correo_estado === 'enviado' ? 'Enviado el ' + fechaHora(r.correo_enviado_en) : '';
+  return `<span class="badge ${e.cls}" title="${esc(title)}">${e.txt}</span>
+    <button class="reenviar" data-id="${r.id}" title="Enviar de nuevo el correo con el resultado">${r.correo_estado ? 'Reenviar' : 'Enviar'}</button>`;
+}
 let rows = [];
 const LIMITE_SEG = 45 * 60;
 function fechaHora(v) {
@@ -321,8 +360,8 @@ function render() {
   ).join('') + '<th></th>';
 
   $('tbody').innerHTML = f.length
-    ? f.map((r) => `<tr>${COLS.map((c) => `<td class="${c.cls || ''} ${c.tdCls ? c.tdCls(r) : ''}">${esc(c.fmt ? c.fmt(r[c.key]) : r[c.key])}</td>`).join('')}
-        <td><button class="ver" data-id="${r.id}">Ver detalle</button><button class="del" data-id="${r.id}" title="Eliminar este registro">Eliminar</button></td></tr>`).join('')
+    ? f.map((r) => `<tr>${COLS.map((c) => `<td class="${c.cls || ''} ${c.tdCls ? c.tdCls(r) : ''}">${c.html ? c.html(r) : esc(c.fmt ? c.fmt(r[c.key]) : r[c.key])}</td>`).join('')}
+        <td class="acc"><button class="ver" data-id="${r.id}">Ver detalle</button><button class="del" data-id="${r.id}" title="Eliminar este registro">Eliminar</button></td></tr>`).join('')
     : `<tr><td class="empty" colspan="${COLS.length + 1}">${rows.length ? 'Ningún resultado coincide con la búsqueda.' : 'Aún no hay envíos.'}</td></tr>`;
 }
 
@@ -334,7 +373,25 @@ $('thead').addEventListener('click', (e) => {
   render();
 });
 
+// Reenvía el correo del resultado: la base lo vuelve a 'pendiente' y el envío
+// ocurre en segundo plano, así que se recarga un par de veces para ver el estado.
+async function reenviar(r) {
+  const copia = 'cramirezso@utec.edu.pe y mcastillom@utec.edu.pe';
+  if (!confirm(`¿Enviar el correo con el resultado a ${r.email}?\nTambién llegará con copia a ${copia}.`)) return;
+  const { error } = await sb.rpc('reenviar_correo', { p_id: r.id });
+  if (error) { alert('No se pudo reenviar: ' + error.message); return; }
+  r.correo_estado = 'pendiente';
+  render();
+  for (const ms of [4000, 8000]) {
+    await new Promise((ok) => setTimeout(ok, ms));
+    await cargar();
+    if (!['pendiente', 'enviando'].includes(rows.find((x) => x.id === r.id)?.correo_estado)) break;
+  }
+}
+
 $('tbody').addEventListener('click', async (e) => {
+  const re = e.target.closest('.reenviar');
+  if (re) { reenviar(rows.find((x) => String(x.id) === re.dataset.id)); return; }
   const btn = e.target.closest('.del');
   if (!btn) {
     const tr = e.target.closest('tr');
@@ -354,11 +411,7 @@ $('q').addEventListener('input', render);
 $('btnReload').addEventListener('click', cargar);
 
 $('btnCsv').addEventListener('click', () => {
-  const extra = [
-    { key: 'respuestas_parte1', label: 'Respuestas Parte I' },
-    { key: 'respuestas_reto1', label: 'Respuestas Parte II' },
-  ];
-  const cols = [...COLS, ...extra];
+  const cols = CSV_COLS;
   const cell = (v) => {
     const s = typeof v === 'object' && v !== null ? JSON.stringify(v) : String(v ?? '');
     return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
